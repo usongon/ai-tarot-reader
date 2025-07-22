@@ -5,8 +5,12 @@ import com.example.tarotreader.model.DrawRequest;
 import com.example.tarotreader.model.InterpretationRequest;
 import com.example.tarotreader.model.TarotCard;
 import com.example.tarotreader.model.TarotSpread;
+import com.example.tarotreader.service.RateLimitExceededException;
+import com.example.tarotreader.service.RateLimitingService;
 import com.example.tarotreader.service.TarotService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +25,16 @@ import java.util.List;
 public class TarotController {
 
     private final TarotService tarotService;
+    private final RateLimitingService rateLimitingService;
 
     /**
      * 使用TarotService构造一个TarotController。
      * @param tarotService 用于处理塔罗牌相关逻辑的服务。
      */
     @Autowired
-    public TarotController(TarotService tarotService) {
+    public TarotController(TarotService tarotService, RateLimitingService rateLimitingService) {
         this.tarotService = tarotService;
+        this.rateLimitingService = rateLimitingService;
     }
 
     /**
@@ -64,10 +70,14 @@ public class TarotController {
     }
 
     @PostMapping("/interpret")
-    public ResponseEntity<String> interpret(@RequestBody InterpretationRequest request) {
+    public ResponseEntity<String> interpret(@RequestBody InterpretationRequest request, HttpServletRequest httpServletRequest) {
         try {
+            String ipAddress = httpServletRequest.getRemoteAddr();
+            rateLimitingService.verifyRateLimit(ipAddress);
             String interpretation = tarotService.getInterpretation(request);
             return ResponseEntity.ok(interpretation);
+        } catch (RateLimitExceededException e) {
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error generating interpretation: " + e.getMessage());
