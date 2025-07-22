@@ -1,0 +1,45 @@
+# 环境变量文件
+.env
+
+# IDE文件
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# 操作系统生成的文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 日志文件
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Java
+target/
+*.class
+*.jar
+!gradle-wrapper.jar
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# 构建输出
+dist/
+build/

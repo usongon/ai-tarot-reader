@@ -6,6 +6,7 @@
 ![Tech Stack](https://img.shields.io/badge/Backend-Spring%20Boot%203-6DB33F?style=flat-square&logo=spring)
 ![Tech Stack](https://img.shields.io/badge/AI-DashScope-FF6B35?style=flat-square)
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ## ✨ 项目特色
 
@@ -14,7 +15,6 @@
 - **🎭 多样牌阵系统**: 支持单张牌、三牌阵、凯尔特十字等经典牌阵
 - **🤖 AI智能解读**: 集成阿里云DashScope，提供个性化的塔罗牌解读
 - **🎨 沉浸式体验**: 精美的卡牌翻转动画和神秘主题设计
-- **📱 响应式设计**: 完美适配桌面端和移动端设备
 
 ### 🎪 交互体验
 - **四阶段占卜流程**: 选择牌阵 → 选择主题 → 虚拟抽牌 → AI解读
@@ -47,7 +47,7 @@
 
 ### AI服务集成
 - **阿里云DashScope**: 大语言模型API，提供专业塔罗牌解读服务
-- **自定义提示工程**: 针对塔罗牌场景优化的AI解读逻辑
+- **专业提示词工程**: 基于塔罗牌大师角色设计的AI提示词系统
 
 ## 🎮 功能详解
 
@@ -69,10 +69,37 @@
 
 ### 🤖 AI解读特色
 
+#### 核心特性
 - **个性化解读**: 结合牌阵、主题、正逆位进行定制化分析
 - **专业术语**: 使用正宗塔罗牌解读术语和象征意义
 - **Markdown渲染**: 支持格式化文本，提供结构化的解读报告
 - **多层次分析**: 从象征意义到实际指导的全方位解读
+
+#### AI提示词工程
+
+我们精心设计了专业的AI提示词系统，确保每次解读都能提供高质量、专业的塔罗牌分析：
+
+**🎭 角色定义**
+```
+你是一位经验丰富的塔罗牌解读大师，擅长根据用户的占卜方向、
+占卜类型和抽到的卡面进行详细解读。你的解读风格直白且详尽，
+以专业塔罗牌大师的口吻进行一次性解读。
+```
+
+**🔮 核心技能**
+- **塔罗牌解读**: 根据占卜方向、牌阵类型和抽牌结果进行详细解读
+- **占卜方向理解**: 深度理解不同占卜主题的特点和需求
+- **牌阵类型分析**: 专业解读每张牌在特定牌阵中的位置意义
+
+**📋 提示词模板**
+```
+本次占卜方向为${direction}, 牌阵类型为${spreads}, 抽卡结果为${cards}
+```
+
+**🛡️ 质量保证**
+- 保持专业性和准确性，符合塔罗牌传统文化背景
+- 提供直白详尽的解读，避免晦涩难懂的表达
+- 确保解读内容紧贴用户提供的具体信息
 
 ## 🚀 快速开始
 
@@ -86,8 +113,8 @@
 ### 1️⃣ 克隆项目
 
 ```bash
-git clone <repository-url>
-cd tarot-reader
+git clone https://github.com/usongon/ai-tarot-reader.git
+cd ai-tarot-reader
 ```
 
 ### 2️⃣ 环境变量配置
@@ -199,7 +226,7 @@ Content-Type: application/json
 ## 📁 项目结构
 
 ```
-tarot-reader/
+ai-tarot-reader/
 ├── 📂 backend/                 # Spring Boot 后端
 │   ├── 📂 src/main/java/
 │   │   └── 📂 com/example/tarotreader/
@@ -215,6 +242,7 @@ tarot-reader/
 │   │   └── 📄 index.js         # 入口文件
 │   ├── 📂 public/              # 静态资源
 │   └── 📄 package.json         # NPM配置
+├── 📄 LICENSE                  # MIT许可证
 └── 📄 README.md               # 项目文档
 ```
 
@@ -300,7 +328,7 @@ public class TarotService {
 
 ## 📝 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
+本项目采用 [MIT 许可证](LICENSE) - 查看 LICENSE 文件了解详情
 
 ## 🤝 贡献指南
 
@@ -316,9 +344,9 @@ public class TarotService {
 
 如有问题或建议，请通过以下方式联系：
 
-- 📧 Email: [your-email@example.com]
-- 🐛 Issues: [项目Issues页面]
-- 💬 Discussions: [项目讨论区]
+- 📧 Email: [zdhuntero@gmail.com]
+- 🐛 Issues: [https://github.com/usongon/ai-tarot-reader/issues]
+- 🌟 GitHub: [https://github.com/usongon/ai-tarot-reader]
 
 ---
 
