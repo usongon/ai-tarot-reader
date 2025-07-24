@@ -70,14 +70,15 @@ public class TarotController {
     }
 
     @PostMapping("/interpret")
-    public ResponseEntity<String> interpret(@RequestBody InterpretationRequest request, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<String> interpret(@RequestBody InterpretationRequest request) {
         try {
-            String ipAddress = httpServletRequest.getRemoteAddr();
-            rateLimitingService.verifyRateLimit(ipAddress);
+            // 从请求体中获取口令
+            String token = request.getToken();
+            rateLimitingService.verifyToken(token);
             String interpretation = tarotService.getInterpretation(request);
             return ResponseEntity.ok(interpretation);
         } catch (RateLimitExceededException e) {
-            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error generating interpretation: " + e.getMessage());

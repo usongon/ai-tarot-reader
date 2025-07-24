@@ -5,9 +5,18 @@ import java.util.List;
 
 public class InterpretationRequest {
 
+    private String token; // 新增口令字段
     private String direction;
     private String spreadName;
     private List<TarotCard> cards;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getDirection() {
         return direction;
