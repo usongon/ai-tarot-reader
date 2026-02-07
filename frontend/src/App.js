@@ -23,6 +23,8 @@ function App() {
     const [interpretation, setInterpretation] = useState('');
     const [isLoadingInterpretation, setIsLoadingInterpretation] = useState(false);
     const [showInterpretationModal, setShowInterpretationModal] = useState(false);
+    const [showTokenModal, setShowTokenModal] = useState(false);
+    const [token, setToken] = useState('');
 
     useEffect(() => {
         fetch('/api/spreads')
@@ -72,6 +74,17 @@ function App() {
 
     const handleInterpret = () => {
         if (flippedIndices.length !== selectedSpread.numberOfCards) return;
+        // 先显示 token 输入弹窗
+        setShowTokenModal(true);
+    };
+
+    const handleTokenSubmit = () => {
+        if (!token.trim()) {
+            alert('请输入有效的 token');
+            return;
+        }
+        
+        setShowTokenModal(false);
         setShowInterpretationModal(true);
         setIsLoadingInterpretation(true);
         setInterpretation('');
@@ -79,6 +92,7 @@ function App() {
         const drawnCards = flippedIndices.map(index => deck[index]);
 
         const requestBody = {
+            token: token.trim(),
             direction: selectedTopic,
             spreadName: selectedSpread.nameChinese,
             cards: drawnCards
@@ -117,6 +131,8 @@ function App() {
         setInterpretation('');
         setIsLoadingInterpretation(false);
         setShowInterpretationModal(false);
+        setShowTokenModal(false);
+        setToken('');
         setPhase(GamePhase.SELECTION);
     };
 
@@ -225,6 +241,41 @@ function App() {
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={() => setShowInterpretationModal(false)}>
                                     关闭
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
+                        {/* Token 输入弹窗 */}
+                        <Modal show={showTokenModal} onHide={() => setShowTokenModal(false)} centered>
+                            <Modal.Header closeButton>
+                                <Modal.Title>请输入访问口令</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <Form.Group>
+                                    <Form.Label>Token:</Form.Label>
+                                    <Form.Control
+                                        type="password"
+                                        placeholder="请输入您的访问口令"
+                                        value={token}
+                                        onChange={(e) => setToken(e.target.value)}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                handleTokenSubmit();
+                                            }
+                                        }}
+                                        autoFocus
+                                    />
+                                    <Form.Text className="text-muted">
+                                        请输入有效的访问口令以继续AI解读
+                                    </Form.Text>
+                                </Form.Group>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={() => setShowTokenModal(false)}>
+                                    取消
+                                </Button>
+                                <Button variant="primary" onClick={handleTokenSubmit}>
+                                    确认
                                 </Button>
                             </Modal.Footer>
                         </Modal>
