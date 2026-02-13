@@ -86,7 +86,7 @@ public class Deck {
         cards.add(new TarotCard("Ten of Swords", "宝剑十", "Painful endings, deep wounds, betrayal, loss, crisis", "痛苦的结局、深深的创伤、背叛、失落、危机", "Recovery, regeneration, resisting an inevitable end", "恢复、再生、抗拒不可避免的结局", "https://www.sacred-texts.com/tarot/pkt/img/sw10.jpg"));
         cards.add(new TarotCard("Page of Swords", "宝剑侍从", "New ideas, curiosity, thirst for knowledge, new ways of communicating", "新想法、好奇心、求知欲、新的沟通方式", "Self-expression, all talk and no action, haphazard action, haste", "自我表达、光说不做、随意的行动、仓促", "https://www.sacred-texts.com/tarot/pkt/img/swpa.jpg"));
         cards.add(new TarotCard("Knight of Swords", "宝剑骑士", "Ambitious, action-oriented, driven to succeed, fast-thinking", "雄心勃勃、以行动为导向、渴望成功、思维敏捷", "Restless, unfocused, impulsive, burn-out", "焦躁不安、注意力不集中、冲动、倦怠", "https://www.sacred-texts.com/tarot/pkt/img/swkn.jpg"));
-        cards.add(new TarotCard("Queen of Swords", "宝剑女王", "Independent, unbiased judgement, clear boundaries, direct communication", "独立、公正的判断、明确的界限、直接的沟通", "Overly-emotional, easily influenced, bitchy, cold-hearted", "情绪过于激动、容易受影响、刻薄、冷酷", "https.sacred-texts.com/tarot/pkt/img/swqu.jpg"));
+        cards.add(new TarotCard("Queen of Swords", "宝剑女王", "Independent, unbiased judgement, clear boundaries, direct communication", "独立、公正的判断、明确的界限、直接的沟通", "Overly-emotional, easily influenced, bitchy, cold-hearted", "情绪过于激动、容易受影响、刻薄、冷酷", "https://www.sacred-texts.com/tarot/pkt/img/swqu.jpg"));
         cards.add(new TarotCard("King of Swords", "宝剑国王", "Mental clarity, intellectual power, authority, truth", "思路清晰、智力、权威、真理", "Quiet power, inner truth, misuse of power, manipulation", "安静的力量、内心的真理、滥用权力、操控", "https://www.sacred-texts.com/tarot/pkt/img/swki.jpg"));
 
         // Minor Arcana - Pentacles
