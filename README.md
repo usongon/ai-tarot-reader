@@ -3,7 +3,7 @@
 > 🔮 一个基于AI驱动的现代化塔罗牌解读Web应用，融合传统塔罗智慧与人工智能技术
 
 ![Tech Stack](https://img.shields.io/badge/Frontend-React%2019-61DAFB?style=flat-square&logo=react)
-![Tech Stack](https://img.shields.io/badge/Backend-Spring%20Boot%203-6DB33F?style=flat-square&logo=spring)
+![Tech Stack](https://img.shields.io/badge/Backend-Spring%20Boot%203.5-6DB33F?style=flat-square&logo=spring)
 ![Tech Stack](https://img.shields.io/badge/AI-DashScope-FF6B35?style=flat-square)
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
@@ -15,91 +15,38 @@
 - **🎭 多样牌阵系统**: 支持单张牌、三牌阵、凯尔特十字等经典牌阵
 - **🤖 AI智能解读**: 集成阿里云DashScope，提供个性化的塔罗牌解读
 - **🎨 沉浸式体验**: 精美的卡牌翻转动画和神秘主题设计
+- **📱 分享功能**: 一键生成精美的占卜结果卡片
 
 ### 🎪 交互体验
-- **四阶段占卜流程**: 选择牌阵 → 选择主题 → 虚拟抽牌 → AI解读
-- **五大占卜方向**: 事业、爱情、财运、健康、综合运势
+- **四阶段占卜流程**: 欢迎页 → 选择牌阵 → 选择方向 → 抽牌解读
+- **八大占卜方向**: 爱情、事业、健康、财运、感情发展、学业、人缘、综合运势
 - **正逆位系统**: 随机生成正位/逆位，提供不同维度的解读
-- **实时反馈**: 流畅的动画效果和即时的用户反馈
+- **流畅动画**: 基于 Framer Motion 的丝滑过渡效果
 
 ## 🛠️ 技术架构
 
 ### 前端技术栈
-```json
-{
-  "framework": "React 19.1.0",
-  "ui_library": "React Bootstrap 2.10.10 + Bootstrap 5.3.7",
-  "markdown": "React Markdown 10.1.0 + Remark GFM 4.0.1",
-  "build_tool": "React Scripts 5.0.1",
-  "styling": "CSS3 + CSS Variables + Google Fonts"
-}
-```
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| React | 19.2.0 | 前端框架 |
+| Vite | 7.3.1 | 构建工具 |
+| Framer Motion | 12.34.0 | 动画库 |
+| React Markdown | 10.1.0 | Markdown渲染 |
+| html2canvas | 1.4.1 | 截图分享 |
+| Tailwind CSS | CDN | 样式框架 |
 
 ### 后端技术栈
-```xml
-<dependencies>
-  <spring-boot>3.5.3</spring-boot>
-  <java>21</java>
-  <dashscope-sdk>2.20.8</dashscope-sdk>
-  <maven>Build Tool</maven>
-</dependencies>
-```
+| 技术 | 版本 | 用途 |
+|------|------|------|
+| Spring Boot | 3.5.3 | 后端框架 |
+| Spring Data JPA | - | ORM框架 |
+| MySQL Connector | - | 数据库连接 |
+| DashScope SDK | 2.20.8 | 阿里云AI服务 |
+| Java | 21 | 编程语言 |
 
-### AI服务集成
-- **阿里云DashScope**: 大语言模型API，提供专业塔罗牌解读服务
-- **专业提示词工程**: 基于塔罗牌大师角色设计的AI提示词系统
-
-## 🎮 功能详解
-
-### 🃏 塔罗牌牌阵系统
-
-| 牌阵类型 | 牌数 | 适用场景 | 解读维度 |
-|---------|------|----------|----------|
-| **单张牌** | 1张 | 快速运势查看 | 当前状态/核心问题 |
-| **三牌阵** | 3张 | 时间线分析 | 过去/现在/未来 |
-| **凯尔特十字** | 10张 | 深度问题剖析 | 全方位综合分析 |
-
-### 🎭 占卜主题分类
-
-- **💼 事业发展**: 职场运势、项目进展、升职加薪
-- **💕 爱情关系**: 感情状态、恋爱机会、关系发展
-- **💰 财运分析**: 投资理财、收入状况、财富累积
-- **🏥 健康状况**: 身体状态、养生建议、疾病预防
-- **🌟 综合运势**: 整体运势、生活状态、未来趋势
-
-### 🤖 AI解读特色
-
-#### 核心特性
-- **个性化解读**: 结合牌阵、主题、正逆位进行定制化分析
-- **专业术语**: 使用正宗塔罗牌解读术语和象征意义
-- **Markdown渲染**: 支持格式化文本，提供结构化的解读报告
-- **多层次分析**: 从象征意义到实际指导的全方位解读
-
-#### AI提示词工程 [详细说明](backend/src/main/resources/tarot-reader-ai-prompt.md)
-
-我们精心设计了专业的AI提示词系统，确保每次解读都能提供高质量、专业的塔罗牌分析：
-
-**🎭 角色定义**
-```
-你是一位经验丰富的塔罗牌解读大师，擅长根据用户的占卜方向、
-占卜类型和抽到的卡面进行详细解读。你的解读风格直白且详尽，
-以专业塔罗牌大师的口吻进行一次性解读。
-```
-
-**🔮 核心技能**
-- **塔罗牌解读**: 根据占卜方向、牌阵类型和抽牌结果进行详细解读
-- **占卜方向理解**: 深度理解不同占卜主题的特点和需求
-- **牌阵类型分析**: 专业解读每张牌在特定牌阵中的位置意义
-
-**📋 提示词模板**
-```
-本次占卜方向为${direction}, 牌阵类型为${spreads}, 抽卡结果为${cards}
-```
-
-**🛡️ 质量保证**
-- 保持专业性和准确性，符合塔罗牌传统文化背景
-- 提供直白详尽的解读，避免晦涩难懂的表达
-- 确保解读内容紧贴用户提供的具体信息
+### 数据存储
+- **MySQL 8.0+**: 存储访问口令和使用次数
+- **数据库表结构**: 参见 [`backend/src/main/resources/schema.sql`](backend/src/main/resources/schema.sql)
 
 ## 🚀 快速开始
 
@@ -108,7 +55,8 @@
 - **Java**: JDK 21+
 - **Node.js**: 16.0+
 - **Maven**: 3.6+
-- **阿里云DashScope账号** (可选，用于AI解读功能)
+- **MySQL**: 8.0+
+- **阿里云DashScope账号** (用于AI解读功能)
 
 ### 1️⃣ 克隆项目
 
@@ -117,17 +65,48 @@ git clone https://github.com/usongon/ai-tarot-reader.git
 cd ai-tarot-reader
 ```
 
-### 2️⃣ 环境变量配置
+### 2️⃣ 数据库配置
 
-在项目根目录创建 `.env` 文件：
+在 MySQL 中执行建表脚本：
 
 ```bash
-# 阿里云DashScope配置 (如需AI解读必填)
-DASH_SCOPE_API_KEY=your_dashscope_api_key
-DASH_SCOPE_TAROT_READER_APP_ID=your_app_id
+mysql -h <数据库地址> -u <用户名> -p < backend/src/main/resources/schema.sql
 ```
 
-### 3️⃣ 启动后端服务
+### 3️⃣ 后端配置
+
+后端支持多环境配置，配置文件位于 `backend/src/main/resources/`：
+
+| 文件 | 用途 |
+|------|------|
+| `application.properties` | 公共配置，切换环境 |
+| `application-dev.properties` | 开发环境配置 |
+| `application-prod.properties` | 生产环境配置 |
+
+**需要配置的项目：**
+
+```properties
+# MySQL 数据库连接
+spring.datasource.url=jdbc:mysql://<地址>:3306/tarot_reader?useSSL=true&serverTimezone=Asia/Shanghai
+spring.datasource.username=<用户名>
+spring.datasource.password=<密码>
+
+# 阿里云 DashScope API 配置
+dashscope.api-key=<你的API密钥>
+dashscope.app-id=<你的应用ID>
+```
+
+**切换环境：**
+
+```properties
+# application.properties
+spring.profiles.active=dev   # 开发环境
+spring.profiles.active=prod  # 生产环境
+```
+
+或通过启动参数：`java -jar app.jar --spring.profiles.active=prod`
+
+### 4️⃣ 启动后端服务
 
 ```bash
 cd backend
@@ -137,21 +116,19 @@ mvn spring-boot:run
 
 后端服务将在 `http://localhost:8080` 启动
 
-### 4️⃣ 启动前端应用
+### 5️⃣ 启动前端应用
 
 ```bash
 cd frontend
 npm install
-npm start
+npm run dev
 ```
 
-前端应用将在 `http://localhost:3000` 启动并自动打开浏览器
+前端应用将在 `http://localhost:5173` 启动
 
 ## 📡 API 接口文档
 
-### 🃏 牌阵管理
-
-#### 获取所有牌阵
+### 获取所有牌阵
 ```http
 GET /api/spreads
 ```
@@ -164,32 +141,20 @@ GET /api/spreads
     "name": "Single Card",
     "nameChinese": "单张牌",
     "description": "A single card for a quick reading.",
-    "descriptionChinese": "最简单的占卜方式，只抽取一张牌",
+    "descriptionChinese": "最简单的占卜方式",
     "numberOfCards": 1
-  },
-  {
-    "id": "three-card",
-    "name": "Three Card Spread", 
-    "nameChinese": "三牌阵",
-    "description": "A spread for past, present, and future.",
-    "descriptionChinese": "经典的三牌阵，分别代表问题的过去、现在和未来",
-    "numberOfCards": 3
   }
 ]
 ```
 
-### 🎴 牌堆管理
-
-#### 获取洗好的牌堆
+### 获取洗好的牌堆
 ```http
 GET /api/deck
 ```
 
-**响应说明**: 返回78张已洗牌的塔罗牌，每张牌包含正逆位状态和完整信息
+返回78张已洗牌的塔罗牌，每张牌包含正逆位状态。
 
-### 🎯 抽牌功能
-
-#### 根据牌阵抽牌
+### 根据牌阵抽牌
 ```http
 POST /api/draw
 Content-Type: application/json
@@ -199,25 +164,20 @@ Content-Type: application/json
 }
 ```
 
-### 🤖 AI解读服务
-
-#### 获取AI解读
+### AI解读服务
 ```http
 POST /api/interpret
 Content-Type: application/json
 
 {
+  "token": "YOUR_ACCESS_TOKEN",
   "direction": "爱情",
   "spreadName": "三牌阵",
   "cards": [
     {
       "name": "The Lovers",
       "nameChinese": "恋人",
-      "reversed": false,
-      "uprightMeaning": "Love, harmony, relationships",
-      "uprightMeaningChinese": "爱、和谐、关系",
-      "reversedMeaning": "Self-love, disharmony, imbalance",
-      "reversedMeaningChinese": "自爱、不和谐、失衡"
+      "reversed": false
     }
   ]
 }
@@ -227,112 +187,87 @@ Content-Type: application/json
 
 ```
 ai-tarot-reader/
-├── 📂 backend/                 # Spring Boot 后端
-│   ├── 📂 src/main/java/
-│   │   └── 📂 com/example/tarotreader/
-│   │       ├── 📂 controller/   # REST控制器
-│   │       ├── 📂 service/      # 业务逻辑层
-│   │       ├── 📂 model/        # 数据模型
-│   │       └── 📄 TarotReaderApplication.java
-│   └── 📄 pom.xml              # Maven配置
-├── 📂 frontend/                # React 前端
+├── 📂 backend/                      # Spring Boot 后端
+│   ├── 📂 src/main/java/com/example/tarotreader/
+│   │   ├── 📂 config/               # 配置类
+│   │   │   ├── DashScopeConfig.java # AI配置
+│   │   │   └── WebConfig.java       # CORS配置
+│   │   ├── 📂 controller/           # REST控制器
+│   │   ├── 📂 model/                # 数据模型
+│   │   ├── 📂 repository/           # 数据访问层
+│   │   ├── 📂 service/              # 业务逻辑层
+│   │   └── 📄 TarotReaderApplication.java
+│   ├── 📂 src/main/resources/
+│   │   ├── 📄 application.properties
+│   │   ├── 📄 application-dev.properties
+│   │   ├── 📄 application-prod.properties
+│   │   └── 📄 schema.sql            # 数据库建表脚本
+│   └── 📄 pom.xml
+├── 📂 frontend/                     # React 前端
 │   ├── 📂 src/
-│   │   ├── 📄 App.js           # 主应用组件
-│   │   ├── 📄 App.css          # 样式文件
-│   │   └── 📄 index.js         # 入口文件
-│   ├── 📂 public/              # 静态资源
-│   └── 📄 package.json         # NPM配置
-├── 📄 LICENSE                  # MIT许可证
-└── 📄 README.md               # 项目文档
+│   │   ├── 📂 components/ui/        # UI组件
+│   │   │   ├── Button.jsx
+│   │   │   ├── TarotCard.jsx
+│   │   │   ├── Modal.jsx
+│   │   │   ├── Loading.jsx
+│   │   │   └── ShareCard.jsx
+│   │   ├── 📂 pages/                # 页面组件
+│   │   │   ├── WelcomePage.jsx
+│   │   │   ├── SpreadSelectionPage.jsx
+│   │   │   ├── DirectionSelectionPage.jsx
+│   │   │   └── DrawingPage.jsx
+│   │   ├── 📂 contexts/             # 状态管理
+│   │   │   └── TarotContext.jsx
+│   │   ├── 📂 services/             # API封装
+│   │   │   └── api.js
+│   │   ├── 📄 App.jsx
+│   │   └── 📄 main.jsx
+│   ├── 📄 package.json
+│   └── 📄 vite.config.js
+├── 📄 LICENSE
+└── 📄 README.md
 ```
 
-## 🎨 核心组件设计
+## 🎮 功能详解
 
-### 前端架构
+### 🃏 塔罗牌牌阵系统
 
-```javascript
-// 游戏状态管理
-const GamePhase = {
-    SELECTION: '选择牌阵',
-    TOPIC_SELECTION: '选择主题', 
-    DRAWING: '抽牌阶段',
-    RESULT: '结果展示'
-};
+| 牌阵类型 | 牌数 | 适用场景 | 解读维度 |
+|---------|------|----------|----------|
+| **单张牌** | 1张 | 快速运势查看 | 当前状态/核心问题 |
+| **三牌阵** | 3张 | 时间线分析 | 过去/现在/未来 |
+| **凯尔特十字** | 10张 | 深度问题剖析 | 全方位综合分析 |
 
-// 占卜主题
-const DIVINATION_TOPICS = [
-    "事业", "爱情", "财运", "健康", "综合运势"
-];
-```
+### 🎭 占卜方向
 
-### 后端服务层
+- **💕 爱情**: 感情状态、恋爱机会、关系发展
+- **💼 事业**: 职场运势、项目进展、升职加薪
+- **💰 财运**: 投资理财、收入状况、财富累积
+- **🏥 健康**: 身体状态、养生建议
+- **💑 感情发展**: 关系走向、情感建议
+- **📚 学业**: 考试运势、学习状态
+- **👥 人缘**: 人际关系、社交运势
+- **🌟 综合运势**: 整体运势、生活状态
 
-```java
-@Service
-public class TarotService {
-    // 牌堆管理
-    public List<TarotCard> getShuffledDeck();
-    
-    // 牌阵管理  
-    public List<TarotSpread> getSpreads();
-    
-    // 抽牌逻辑
-    public List<TarotCard> draw(TarotSpread spread);
-    
-    // AI解读
-    public String getInterpretation(InterpretationRequest request);
-}
-```
+### 🔐 访问控制
 
-## 🔧 开发指南
+- 基于口令的访问控制，保护 AI 解读服务
+- 每个口令有使用次数限制
+- 口令存储在 MySQL 数据库中，支持动态管理
 
-### 前端开发
+## 🎨 UI设计特点
 
-- **组件化设计**: 采用React Hooks进行状态管理
-- **样式系统**: 使用CSS Variables实现主题化设计
-- **动画效果**: CSS3 Transform + Transition实现流畅动画
-- **响应式布局**: Bootstrap Grid + 自定义媒体查询
-
-### 后端开发
-
-- **RESTful API**: 遵循REST设计原则
-- **服务分层**: Controller → Service → Model 清晰分层
-- **依赖注入**: 使用Spring框架的IoC容器
-- **数据模型**: 完整的塔罗牌实体设计
-
-### AI集成
-
-- **DashScope SDK**: 阿里云大语言模型集成
-- **提示工程**: 针对塔罗牌场景的专业提示词
-- **错误处理**: 完善的AI服务降级机制
-
-## 🌟 特色亮点
-
-### 🎨 视觉设计
-- **神秘主题**: 深紫色调配合星空背景
-- **卡牌动画**: 3D翻转效果和缩放动画
-- **自定义字体**: Google Fonts 优雅字体搭配
-- **响应式UI**: 完美适配各种屏幕尺寸
-
-### 🔮 用户体验
-- **直观操作**: 点击翻牌的沉浸式体验
-- **智能引导**: 清晰的操作步骤和进度提示
-- **实时反馈**: 加载状态和操作反馈
-- **个性化**: 多主题选择和定制化解读
-
-### 🚀 技术创新
-- **现代化技术栈**: 最新版本的React和Spring Boot
-- **AI驱动**: 智能化的塔罗牌解读服务
-- **微服务架构**: 前后端分离的现代化架构
-- **云服务集成**: 阿里云AI服务无缝对接
+- **神秘主题**: 深紫色渐变背景，营造神秘氛围
+- **3D翻转**: 塔罗牌翻转动画，还原真实抽牌体验
+- **流畅过渡**: Framer Motion 驱动的页面切换动画
+- **响应式设计**: 完美适配桌面和移动端
+- **分享卡片**: 一键生成精美的占卜结果图片
 
 ## 📝 许可证
 
-本项目采用 [MIT 许可证](LICENSE) - 查看 LICENSE 文件了解详情
+本项目采用 [MIT 许可证](LICENSE)
 
 ## 🤝 贡献指南
-
-欢迎贡献代码！请遵循以下步骤：
 
 1. Fork 本仓库
 2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
@@ -341,8 +276,6 @@ public class TarotService {
 5. 开启 Pull Request
 
 ## 📞 联系方式
-
-如有问题或建议，请通过以下方式联系：
 
 - 📧 Email: [zdhuntero@gmail.com]
 - 🐛 Issues: [https://github.com/usongon/ai-tarot-reader/issues]

@@ -1,6 +1,7 @@
 
 package com.example.tarotreader.service;
 
+import com.example.tarotreader.config.DashScopeConfig;
 import com.example.tarotreader.model.Deck;
 import com.example.tarotreader.model.TarotCard;
 import com.example.tarotreader.model.TarotSpread;
@@ -28,15 +29,18 @@ import java.util.stream.Collectors;
 public class TarotService {
 
     private final PersistenceService persistenceService;
+    private final DashScopeConfig dashScopeConfig;
     private final List<TarotSpread> spreads;
 
     /**
      * 构造一个TarotService并初始化可用的牌阵列表。
      * @param persistenceService 用于持久化抽取的卡牌的服务（当前未使用）。
+     * @param dashScopeConfig DashScope API配置。
      */
     @Autowired
-    public TarotService(PersistenceService persistenceService) {
+    public TarotService(PersistenceService persistenceService, DashScopeConfig dashScopeConfig) {
         this.persistenceService = persistenceService;
+        this.dashScopeConfig = dashScopeConfig;
         this.spreads = Arrays.asList(
                 new TarotSpread("single", "Single Card", "单张牌", "A single card for a quick reading.", "最简单的占卜方式，只抽取一张牌，用于快速了解当前运势或问题的核心。", 1),
                 new TarotSpread("three-card", "Three Card Spread", "三牌阵", "A spread for past, present, and future.", "经典的三牌阵，分别代表问题的过去、现在和未来，帮助理清思绪。", 3),
@@ -101,8 +105,8 @@ public class TarotService {
         );
 
         ApplicationParam param = ApplicationParam.builder()
-                .apiKey(System.getenv("DASH_SCOPE_API_KEY"))
-                .appId(System.getenv("DASH_SCOPE_TAROT_READER_APP_ID"))
+                .apiKey(dashScopeConfig.getApiKey())
+                .appId(dashScopeConfig.getAppId())
                 .prompt("抽卡成功")
                 .bizParams(JsonUtils.parse(bizParams))
                 .build();
