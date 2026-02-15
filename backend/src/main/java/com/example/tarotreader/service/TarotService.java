@@ -1,6 +1,7 @@
 
 package com.example.tarotreader.service;
 
+import com.alibaba.dashscope.app.FlowStreamMode;
 import com.example.tarotreader.config.DashScopeConfig;
 import com.example.tarotreader.model.Deck;
 import com.example.tarotreader.model.TarotCard;
@@ -15,6 +16,8 @@ import com.alibaba.dashscope.exception.InputRequiredException;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.JsonUtils;
 import com.example.tarotreader.model.InterpretationRequest;
+
+import io.reactivex.Flowable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +37,9 @@ public class TarotService {
 
     /**
      * 构造一个TarotService并初始化可用的牌阵列表。
+     *
      * @param persistenceService 用于持久化抽取的卡牌的服务（当前未使用）。
-     * @param dashScopeConfig DashScope API配置。
+     * @param dashScopeConfig    DashScope API配置。
      */
     @Autowired
     public TarotService(PersistenceService persistenceService, DashScopeConfig dashScopeConfig) {
@@ -50,6 +54,7 @@ public class TarotService {
 
     /**
      * 创建一副新牌，将其洗牌，并为每张牌随机分配正逆位状态。
+     *
      * @return 代表完整、已洗牌的牌堆的TarotCard对象列表。
      */
     public List<TarotCard> getShuffledDeck() {
@@ -62,6 +67,7 @@ public class TarotService {
 
     /**
      * 获取可用的塔罗牌牌阵列表。
+     *
      * @return TarotSpread对象列表。
      */
     public List<TarotSpread> getSpreads() {
@@ -70,6 +76,7 @@ public class TarotService {
 
     /**
      * 根据ID查找塔罗牌牌阵。
+     *
      * @param id 要查找的牌阵的ID。
      * @return 如果找到，则返回包含TarotSpread的Optional，否则返回空的Optional。
      */
@@ -81,6 +88,7 @@ public class TarotService {
      * 为给定的牌阵抽取指定数量的牌。
      * 每次抽牌都会创建并洗乱一副新牌。
      * 抽取的牌通过PersistenceService保存。
+     *
      * @param spread 用于抽牌的TarotSpread。
      * @return 抽取的TarotCard对象列表。
      */
@@ -114,5 +122,38 @@ public class TarotService {
         Application application = new Application();
         ApplicationResult result = application.call(param);
         return result.getOutput().getText();
+    }
+
+    /**
+     * 流式获取塔罗牌解读结果。
+     *
+     * @param request 包含牌阵、方向和卡牌信息的请求对象。
+     * @return Flowable<ApplicationResult> 流式输出的结果。
+     * @throws NoApiKeyException      如果未设置API密钥。
+     * @throws InputRequiredException 如果缺少必需的输入参数。
+     */
+    public Flowable<ApplicationResult> getInterpretationStream(InterpretationRequest request) throws NoApiKeyException, InputRequiredException {
+        String cardsString = request.getCards().stream()
+                .map(card -> card.getName() + "(" + (card.isReversed() ? "逆位" : "正位") + ")")
+                .collect(Collectors.joining(","));
+
+        String bizParams = String.format(
+                "{\"spreads\":\"%s\",\"direction\":\"%s\",\"cards\":\"%s\"}",
+                request.getSpreadName(),
+                request.getDirection(),
+                cardsString
+        );
+
+        ApplicationParam param = ApplicationParam.builder()
+                .apiKey(dashScopeConfig.getApiKey())
+                .appId(dashScopeConfig.getAppId())
+                .prompt("抽卡成功")
+                .bizParams(JsonUtils.parse(bizParams))
+                .incrementalOutput(true)
+                .flowStreamMode(FlowStreamMode.MESSAGE_FORMAT)
+                .build();
+
+        Application application = new Application();
+        return application.streamCall(param);
     }
 }
