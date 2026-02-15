@@ -16,6 +16,7 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
   const [interpretation, setInterpretation] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [interpretationModalOpen, setInterpretationModalOpen] = useState(false);
+  const [shareImage, setShareImage] = useState(null); // 存储生成的分享图片
   const shareCardRef = useRef(null);
 
   const maxCards = spread?.cardCount || 1;
@@ -49,20 +50,29 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
 
   const handleShare = async () => {
     setShareModalOpen(true);
+    setShareImage(null); // 重置图片
 
     setTimeout(async () => {
       if (shareCardRef.current) {
         try {
           const canvas = await html2canvas(shareCardRef.current);
-          const link = document.createElement('a');
-          link.download = `塔罗占卜-${direction?.name || '结果'}.png`;
-          link.href = canvas.toDataURL();
-          link.click();
+          const imageUrl = canvas.toDataURL('image/png');
+          setShareImage(imageUrl); // 存储图片用于预览
         } catch (error) {
           alert('生成图片失败，请重试');
+          setShareModalOpen(false);
         }
       }
     }, 100);
+  };
+
+  const handleDownloadShare = () => {
+    if (shareImage) {
+      const link = document.createElement('a');
+      link.download = `塔罗占卜-${direction?.name || '结果'}.png`;
+      link.href = shareImage;
+      link.click();
+    }
   };
 
   // 获取用于解读的卡片（只取已翻开的牌，限制数量）
@@ -157,6 +167,21 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
         </motion.div>
       )}
 
+      {/* 已有解读结果时显示查看按钮 */}
+      {interpretation && !interpretationModalOpen && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-8 left-0 right-0 flex justify-center z-30"
+        >
+          <div className="bg-transparent">
+            <Button size="large" onClick={() => setInterpretationModalOpen(true)}>
+              👁️ 查看解读结果
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
       {/* 密钥输入弹窗 */}
       <Modal
         isOpen={tokenModalOpen}
@@ -205,9 +230,10 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
         isOpen={interpretationModalOpen}
         onClose={() => setInterpretationModalOpen(false)}
         title="🔮 AI大师解读"
+        size="xlarge"
       >
         <div className="space-y-4">
-          <div className="prose prose-invert prose-lg max-w-none text-purple-100 max-h-96 overflow-y-auto p-4 bg-purple-900/20 rounded-xl">
+          <div className="prose prose-lg max-w-none text-gray-800 max-h-[60vh] overflow-y-auto p-5 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{interpretation}</ReactMarkdown>
           </div>
           <div className="flex gap-3 justify-center">
@@ -221,11 +247,36 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
       <Modal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
-        title=""
+        title="📸 分享卡片预览"
+        size="xlarge"
       >
-        <div className="text-center">
-          <p className="text-gray-600 mb-4">图片已生成并自动下载</p>
-          <Button onClick={() => setShareModalOpen(false)}>关闭</Button>
+        <div className="space-y-4">
+          {shareImage ? (
+            <>
+              {/* 图片预览区域 */}
+              <div className="max-h-[60vh] overflow-y-auto rounded-lg">
+                <img
+                  src={shareImage}
+                  alt="分享卡片"
+                  className="w-full h-auto rounded-lg"
+                />
+              </div>
+              {/* 操作按钮 */}
+              <div className="flex gap-3 justify-center">
+                <Button onClick={handleDownloadShare}>
+                  💾 下载图片
+                </Button>
+                <Button variant="secondary" onClick={() => setShareModalOpen(false)}>
+                  关闭
+                </Button>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center py-8">
+              <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-600">正在生成分享卡片...</p>
+            </div>
+          )}
         </div>
       </Modal>
 

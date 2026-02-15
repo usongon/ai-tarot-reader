@@ -1,6 +1,13 @@
 import { motion, AnimatePresence } from 'framer-motion';
 
-export function Modal({ isOpen, onClose, title, children }) {
+export function Modal({ isOpen, onClose, title, children, size = 'medium' }) {
+  const sizeClasses = {
+    small: 'max-w-sm',
+    medium: 'max-w-md',
+    large: 'max-w-2xl',
+    xlarge: 'max-w-4xl'
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -18,7 +25,7 @@ export function Modal({ isOpen, onClose, title, children }) {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed inset-0 flex items-center justify-center z-50 p-4"
           >
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 max-h-[80vh] overflow-y-auto">
+            <div className={`bg-white rounded-2xl shadow-2xl ${sizeClasses[size]} w-full p-6 max-h-[80vh] overflow-y-auto`}>
               {title && (
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">{title}</h2>
               )}
