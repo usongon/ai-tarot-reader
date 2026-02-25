@@ -1,8 +1,11 @@
-
 package com.example.tarotreader.model;
 
 import java.util.List;
 
+/**
+ * 解读请求模型类。
+ * @author dehua
+ */
 public class InterpretationRequest {
 
     private String token; // 新增口令字段

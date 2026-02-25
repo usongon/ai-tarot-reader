@@ -3,6 +3,10 @@ package com.example.tarotreader.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * DashScope配置类。
+ * @author dehua
+ */
 @Configuration
 @ConfigurationProperties(prefix = "dashscope")
 public class DashScopeConfig {

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 /**
  * 用于处理塔罗牌相关逻辑的服务类。
  * 包括洗牌、牌阵管理和抽牌功能。
+ * @author dehua
  */
 @Service
 public class TarotService {

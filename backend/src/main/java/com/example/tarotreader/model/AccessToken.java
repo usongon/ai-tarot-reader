@@ -3,6 +3,10 @@ package com.example.tarotreader.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * 访问口令实体类。
+ * @author dehua
+ */
 @Entity
 @Table(name = "access_token")
 public class AccessToken {

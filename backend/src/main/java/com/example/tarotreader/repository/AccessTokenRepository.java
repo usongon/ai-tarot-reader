@@ -9,6 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * 访问口令数据访问接口。
+ * @author dehua
+ */
 @Repository
 public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> {
 

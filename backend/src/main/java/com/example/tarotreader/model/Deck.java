@@ -8,6 +8,7 @@ import java.util.List;
  * 代表一副78张的塔罗牌。
  * 这个类初始化完整的牌堆，包括大阿卡纳和小阿卡纳，
  * 并提供洗牌和抽牌的方法。
+ * @author dehua
  */
 public class Deck {
 
