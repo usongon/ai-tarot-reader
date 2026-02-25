@@ -10,6 +10,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 限流服务类。
+ * @author dehua
+ */
 @Service
 public class RateLimitingService {
 

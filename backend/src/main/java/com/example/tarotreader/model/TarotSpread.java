@@ -1,6 +1,9 @@
-
 package com.example.tarotreader.model;
 
+/**
+ * 塔罗牌阵模型类。
+ * @author dehua
+ */
 public class TarotSpread {
 
     private String id;

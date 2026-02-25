@@ -1,6 +1,9 @@
-
 package com.example.tarotreader.model;
 
+/**
+ * 抽牌请求模型类。
+ * @author dehua
+ */
 public class DrawRequest {
 
     private String spreadId;

@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
 /**
  * 塔罗牌解读应用的主控制器。
  * 处理所有与塔罗牌、牌堆和牌阵相关的API请求。
+ * @author dehua
  */
 @RestController
 @RequestMapping("/api")

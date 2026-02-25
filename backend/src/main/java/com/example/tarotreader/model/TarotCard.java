@@ -1,6 +1,9 @@
-
 package com.example.tarotreader.model;
 
+/**
+ * 塔罗牌模型类。
+ * @author dehua
+ */
 public class TarotCard {
 
     private String name;
