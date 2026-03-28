@@ -124,3 +124,21 @@ body {
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   margin: 2em 0;
 }
+
+/* Mobile-specific styles (< 640px) */
+@media (max-width: 639px) {
+  body {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  input, textarea, select {
+    user-select: auto;
+  }
+
+  /* 隐藏移动端滚动条但保持滚动功能 */
+  ::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+}
