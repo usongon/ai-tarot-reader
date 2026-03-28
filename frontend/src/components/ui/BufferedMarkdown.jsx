@@ -1,5 +1,33 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
+
+/**
+ * 预处理 Markdown 文本：
+ * 1. 在列表项（* - 或 数字.）前插入空行，确保 Markdown 解析器识别列表
+ * 2. 在标题行（# 开头）前插入空行
+ */
+export function normalizeMarkdown(text) {
+  if (!text) return text;
+  // 将行内出现的列表标记拆到新行（仅在句末标点后触发，避免误伤正常数字）
+  const sentEnd = /[。！？；：）”」』…]/;
+  text = text.replace(new RegExp(`(${sentEnd.source})\\s*\\* `, 'g'), '$1\n* ');
+  text = text.replace(new RegExp(`(${sentEnd.source})\\s*(\\d+)\\. `, 'g'), '$1\n$2. ');
+  text = text.replace(new RegExp(`(${sentEnd.source})\\s*- `, 'g'), '$1\n- ');
+  const listOrHeading = /^\s*(?:[*\-] |\d+\. |#{1,6}\s)/;
+  const lines = text.split('\n');
+  const result = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const prevLine = result.length > 0 ? result[result.length - 1] : '';
+    // 当前行是列表/标题，且前一行不是空行也不是同类项，插入空行
+    if (listOrHeading.test(line) && prevLine.trim() !== '' && !listOrHeading.test(prevLine)) {
+      result.push('');
+    }
+    result.push(line);
+  }
+  return result.join('\n');
+}
 
 /**
  * 缓冲式 Markdown 渲染组件
@@ -9,25 +37,17 @@ import remarkGfm from 'remark-gfm';
 export function BufferedMarkdown({ content }) {
   if (!content) return null;
 
-  // 按换行符分割内容
-  // 最后一个元素可能是未完成的行
   const lines = content.split('\n');
-
-  // 如果最后一个字符是换行符，说明所有行都完整
   const endsWithNewline = content.endsWith('\n');
-
-  // 确定哪些行是完整的
-  const completeLinesCount = endsWithNewline ? lines.length - 1 : lines.length - 1;
-  const completeContent = lines.slice(0, completeLinesCount).join('\n');
+  const completeLinesCount = lines.length - 1;
+  const completeContent = normalizeMarkdown(lines.slice(0, completeLinesCount).join('\n'));
   const incompleteLine = endsWithNewline ? '' : lines[lines.length - 1];
 
   return (
     <>
-      {/* 渲染完整的行 */}
       {completeContent && (
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{completeContent}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{completeContent}</ReactMarkdown>
       )}
-      {/* 未完成的行显示为原始文本，保持换行 */}
       {incompleteLine && (
         <span className="whitespace-pre-wrap">{incompleteLine}</span>
       )}

@@ -1,6 +1,8 @@
 import React, { forwardRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
+import { normalizeMarkdown } from './BufferedMarkdown';
 
 export const ShareCard = forwardRef(({ spread, direction, cards, interpretation }, ref) => {
   return (
@@ -46,7 +48,7 @@ export const ShareCard = forwardRef(({ spread, direction, cards, interpretation 
       <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
         <h2 className="text-2xl font-bold mb-4 text-center">🔮 AI大师解读</h2>
         <div className="prose prose-invert prose-sm max-w-none text-purple-100">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{interpretation}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{normalizeMarkdown(interpretation)}</ReactMarkdown>
         </div>
       </div>
 

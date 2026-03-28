@@ -9,6 +9,8 @@ import { BaziShareCard } from '../components/bazi/BaziShareCard';
 import { baziApi } from '../services/api';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
+import { normalizeMarkdown } from '../components/ui/BufferedMarkdown';
 import html2canvas from 'html2canvas';
 
 export function BaziChartPage({ chart, token, onBack }) {
@@ -153,7 +155,7 @@ export function BaziChartPage({ chart, token, onBack }) {
         title="🔮 AI 命理解读" size="xlarge">
         <div className="space-y-4">
           <div className="prose prose-sm md:prose-lg max-w-none text-gray-800 max-h-[50vh] md:max-h-[60vh] overflow-y-auto p-3 md:p-5 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{interpretation}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{normalizeMarkdown(interpretation)}</ReactMarkdown>
           </div>
           <div className="flex gap-3 justify-center">
             <Button onClick={handleShare}>📸 分享命盘</Button>

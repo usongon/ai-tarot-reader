@@ -1,6 +1,8 @@
 import React, { forwardRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
+import { normalizeMarkdown } from '../ui/BufferedMarkdown';
 
 const WU_XING_COLORS = {
   '金': '#facc15',
@@ -157,7 +159,7 @@ export const BaziShareCard = forwardRef(({ chart, interpretation }, ref) => {
           </h2>
           <div style={{ color: '#e9d5ff', fontSize: 14, lineHeight: 1.8 }}>
               <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
+                remarkPlugins={[remarkGfm, remarkBreaks]}
                 components={{
                   h1: ({ children }) => <h1 style={{ color: '#fff', fontSize: 18, fontWeight: 'bold', margin: '12px 0 6px' }}>{children}</h1>,
                   h2: ({ children }) => <h2 style={{ color: '#fff', fontSize: 16, fontWeight: 'bold', margin: '10px 0 6px' }}>{children}</h2>,
@@ -169,7 +171,7 @@ export const BaziShareCard = forwardRef(({ chart, interpretation }, ref) => {
                   blockquote: ({ children }) => <blockquote style={{ borderLeft: '3px solid #7c3aed', paddingLeft: 12, margin: '8px 0', color: '#c4b5fd' }}>{children}</blockquote>,
                 }}
               >
-                {interpretation}
+                {normalizeMarkdown(interpretation)}
               </ReactMarkdown>
             </div>
         </div>
