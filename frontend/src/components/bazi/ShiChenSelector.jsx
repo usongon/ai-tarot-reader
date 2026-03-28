@@ -18,32 +18,30 @@ const shiChenList = [
 export function ShiChenSelector({ value, onChange }) {
   return (
     <div className="space-y-2">
-      <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-1.5 md:gap-2">
         {shiChenList.map((sc) => (
           <motion.button
             key={sc.id}
-            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => onChange(sc.id)}
-            className={`p-3 rounded-xl text-center transition-all ${
+            className={`p-2 md:p-3 rounded-xl text-center transition-all min-h-[44px] md:min-h-0 ${
               value === sc.id
-                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg'
-                : 'bg-white/10 text-white hover:bg-white/20'
+                ? 'bg-gradient-to-r from-purple-600/40 to-indigo-600/40 md:from-purple-600 md:to-indigo-600 text-white border border-purple-400/30 md:border-transparent shadow-lg'
+                : 'bg-white/[0.06] md:bg-white/10 text-white hover:bg-white/[0.1] md:hover:bg-white/20 border border-white/[0.06] md:border-transparent'
             }`}
           >
-            <div className="font-bold">{sc.name}</div>
-            <div className="text-xs opacity-70">{sc.range}</div>
+            <div className="font-bold text-xs md:text-sm">{sc.name}</div>
+            <div className="text-[9px] md:text-xs opacity-60">{sc.range}</div>
           </motion.button>
         ))}
       </div>
       <motion.button
-        whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => onChange('unknown')}
-        className={`w-full p-3 rounded-xl text-center transition-all ${
+        className={`w-full p-2.5 md:p-3 rounded-xl text-center transition-all text-xs md:text-sm ${
           value === 'unknown'
-            ? 'bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-lg'
-            : 'bg-white/5 text-purple-200 hover:bg-white/10 border border-white/10'
+            ? 'bg-gradient-to-r from-gray-600/40 to-gray-700/40 md:from-gray-500 md:to-gray-600 text-white shadow-lg border border-gray-400/20 md:border-transparent'
+            : 'bg-white/[0.04] md:bg-white/5 text-purple-300 hover:bg-white/[0.08] md:hover:bg-white/10 border border-white/[0.06] md:border-white/10'
         }`}
       >
         不确定出生时间
