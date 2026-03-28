@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/ai-tarot-reader.iml" filepath="$PROJECT_DIR$/.idea/ai-tarot-reader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/backend/tarot-reader.iml" filepath="$PROJECT_DIR$/backend/tarot-reader.iml" />
     </modules>
   </component>
 </project>
