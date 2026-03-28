@@ -1,6 +1,12 @@
 import React, { forwardRef } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+
+const WU_XING_COLORS = {
+  '金': '#facc15',
+  '木': '#4ade80',
+  '水': '#60a5fa',
+  '火': '#f87171',
+  '土': '#fbbf24',
+};
 
 export const BaziShareCard = forwardRef(({ chart, interpretation }, ref) => {
   const pillars = [
@@ -10,57 +16,151 @@ export const BaziShareCard = forwardRef(({ chart, interpretation }, ref) => {
     ...(chart.hourPillar ? [{ label: '时柱', pillar: chart.hourPillar }] : []),
   ];
 
+  const wx = chart.wuXingStats;
+  const maxWuXing = Math.max(wx.jin, wx.mu, wx.shui, wx.huo, wx.tu, 1);
+
+  const wuXingItems = [
+    { label: '金', value: wx.jin },
+    { label: '木', value: wx.mu },
+    { label: '水', value: wx.shui },
+    { label: '火', value: wx.huo },
+    { label: '土', value: wx.tu },
+  ];
+
   return (
     <div
       ref={ref}
-      className="bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 p-8 rounded-2xl max-w-4xl mx-auto text-white"
-      style={{ width: 800 }}
+      style={{
+        width: 800,
+        background: 'linear-gradient(135deg, #581c87, #312e81, #581c87)',
+        padding: 32,
+        borderRadius: 16,
+        color: '#ffffff',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      }}
     >
-      <div className="text-center mb-6">
-        <h1 className="text-4xl font-bold mb-2">🧭 八字命理 🧭</h1>
-        <div className="text-purple-200 text-lg">天机玄妙，命理通明</div>
+      {/* 标题 */}
+      <div style={{ textAlign: 'center', marginBottom: 24 }}>
+        <h1 style={{ fontSize: 32, fontWeight: 'bold', color: '#fff', margin: '0 0 8px' }}>
+          八字命理
+        </h1>
+        <div style={{ color: '#c4b5fd', fontSize: 16 }}>天机玄妙，命理通明</div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-4">
-        <div className="flex justify-between">
-          <span className="text-purple-200">{chart.genderText}命 · {chart.solarDate}</span>
-          <span className="text-purple-200">农历 {chart.lunarDate}</span>
-        </div>
+      {/* 基本信息 */}
+      <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 12, marginBottom: 16, display: 'flex', justifyContent: 'space-between', color: '#e9d5ff' }}>
+        <span>{chart.genderText}命 · {chart.solarDate}</span>
+        <span>农历 {chart.lunarDate}</span>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-4">
-        <h2 className="text-xl font-bold mb-4 text-center">四柱八字</h2>
-        <div className="grid grid-cols-4 gap-3">
+      {/* 四柱八字 */}
+      <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+        <h2 style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center', margin: '0 0 12px', color: '#fff' }}>四柱八字</h2>
+        <div style={{ display: 'flex', gap: 12 }}>
           {pillars.map(({ label, pillar }) => (
-            <div key={label} className="text-center bg-white/10 rounded-lg py-3">
-              <div className="text-purple-300 text-xs mb-1">{label}</div>
-              <div className="text-2xl font-bold">{pillar.displayText}</div>
-              <div className="text-xs text-purple-200 mt-1">{pillar.tianGanWuXing}{pillar.diZhiWuXing}</div>
+            <div key={label} style={{ flex: 1, textAlign: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: '10px 0' }}>
+              <div style={{ color: '#c4b5fd', fontSize: 12, marginBottom: 4 }}>{label}</div>
+              <div style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }}>{pillar.displayText}</div>
+              <div style={{ fontSize: 12, color: '#ddd6fe', marginTop: 4 }}>{pillar.tianGanWuXing}{pillar.diZhiWuXing}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {chart.wuXingStats && (
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-4">
-          <div className="text-center">
-            <span className="text-sm text-purple-200">
-              五行 · 金{chart.wuXingStats.jin} 木{chart.wuXingStats.mu} 水{chart.wuXingStats.shui} 火{chart.wuXingStats.huo} 土{chart.wuXingStats.tu} · 日主{chart.wuXingStats.dayMasterWuXing} · {chart.wuXingStats.strength}
+      {/* 五行分布 */}
+      <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 'bold', margin: '0 0 12px', color: '#fff' }}>
+          五行分布 · 日主：{wx.dayMasterWuXing} · {wx.strength}
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {wuXingItems.map(({ label, value }) => (
+            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 24, color: '#fff' }}>{label}</span>
+              <div style={{ flex: 1, background: 'rgba(255,255,255,0.1)', borderRadius: 10, height: 16 }}>
+                <div style={{
+                  width: `${Math.max((value / maxWuXing) * 100, value > 0 ? 10 : 0)}%`,
+                  height: 16,
+                  borderRadius: 10,
+                  background: WU_XING_COLORS[label],
+                  minWidth: value > 0 ? 16 : 0,
+                }} />
+              </div>
+              <span style={{ width: 24, textAlign: 'right', color: '#fff', fontSize: 14 }}>{value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 十神关系 */}
+      {chart.shiShenList && chart.shiShenList.length > 0 && (
+        <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 'bold', margin: '0 0 12px', color: '#fff' }}>十神关系</h2>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {chart.shiShenList.map((ss, i) => (
+              <div key={i} style={{
+                background: 'rgba(255,255,255,0.1)',
+                borderRadius: 6,
+                padding: '4px 10px',
+                fontSize: 13,
+                color: '#e9d5ff',
+              }}>
+                {ss.position} {ss.tianGan}({ss.wuXing}) → {ss.shiShen}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 当前大运 */}
+      {chart.currentDaYun && (
+        <div style={{ background: 'rgba(139,92,246,0.3)', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 'bold', margin: '0 0 4px', color: '#fff' }}>当前大运</h2>
+          <div style={{ fontSize: 24, fontWeight: 'bold', color: '#fff' }}>
+            {chart.currentDaYun.displayText}
+            <span style={{ fontSize: 14, fontWeight: 'normal', color: '#ddd6fe', marginLeft: 8 }}>
+              ({chart.currentDaYun.startAge}-{chart.currentDaYun.endAge}岁)
             </span>
           </div>
         </div>
       )}
 
-      {interpretation && (
-        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-4">
-          <h2 className="text-xl font-bold mb-4 text-center">🔮 AI 命理解读</h2>
-          <div className="prose prose-invert prose-sm max-w-none text-purple-100 max-h-[300px] overflow-hidden">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{interpretation}</ReactMarkdown>
+      {/* 大运走势 */}
+      {chart.daYunList && chart.daYunList.length > 0 && (
+        <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 'bold', margin: '0 0 12px', color: '#fff' }}>大运走势</h2>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {chart.daYunList.map((dy, i) => (
+              <div key={i} style={{
+                padding: '6px 12px',
+                borderRadius: 8,
+                textAlign: 'center',
+                background: dy.current ? 'linear-gradient(135deg, #7c3aed, #4f46e5)' : 'rgba(255,255,255,0.08)',
+                color: '#fff',
+                fontSize: 13,
+                minWidth: 60,
+              }}>
+                <div style={{ fontWeight: 'bold' }}>{dy.displayText}</div>
+                <div style={{ fontSize: 11, opacity: 0.7 }}>{dy.startAge}-{dy.endAge}</div>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
-      <div className="text-center mt-6 text-purple-300 text-sm">
+      {/* AI 解读 */}
+      {interpretation && (
+        <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 12, padding: 16, marginBottom: 16 }}>
+          <h2 style={{ fontSize: 16, fontWeight: 'bold', textAlign: 'center', margin: '0 0 12px', color: '#fff' }}>
+            AI 命理解读
+          </h2>
+          <div style={{ color: '#e9d5ff', fontSize: 14, lineHeight: 1.8, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            {interpretation}
+          </div>
+        </div>
+      )}
+
+      {/* 底部 */}
+      <div style={{ textAlign: 'center', marginTop: 16, color: '#a78bfa', fontSize: 13 }}>
         由 AI 灵境占卜平台提供解读服务
       </div>
     </div>
