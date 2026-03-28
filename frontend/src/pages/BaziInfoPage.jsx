@@ -77,11 +77,11 @@ export function BaziInfoPage({ onSubmit, onBack }) {
             <div className="flex gap-2">
               <button onClick={() => setGender('male')}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${gender === 'male' ? 'bg-yellow-400/10 text-yellow-400 border border-yellow-400/30' : 'bg-white/[0.06] text-gray-400 border border-white/10'}`}>
-                ♂ 男
+                男
               </button>
               <button onClick={() => setGender('female')}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${gender === 'female' ? 'bg-pink-400/10 text-pink-400 border border-pink-400/30' : 'bg-white/[0.06] text-gray-400 border border-white/10'}`}>
-                ♀ 女
+                女
               </button>
             </div>
           </div>

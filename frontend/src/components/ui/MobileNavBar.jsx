@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 export function MobileNavBar({ title, onBack, rightAction }) {
   return (
     <div className="md:hidden sticky top-0 z-20 bg-black/30 backdrop-blur-sm px-4 py-2.5 flex items-center justify-between">
