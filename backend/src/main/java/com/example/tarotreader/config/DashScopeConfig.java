@@ -13,6 +13,7 @@ public class DashScopeConfig {
 
     private String apiKey;
     private String appId;
+    private String baziAppId;
 
     public String getApiKey() {
         return apiKey;
@@ -28,5 +29,13 @@ public class DashScopeConfig {
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+
+    public String getBaziAppId() {
+        return baziAppId;
+    }
+
+    public void setBaziAppId(String baziAppId) {
+        this.baziAppId = baziAppId;
     }
 }
