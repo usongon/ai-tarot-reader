@@ -4,6 +4,8 @@ import { WelcomePage } from './pages/WelcomePage';
 import { SpreadSelectionPage } from './pages/SpreadSelectionPage';
 import { DirectionSelectionPage } from './pages/DirectionSelectionPage';
 import { DrawingPage } from './pages/DrawingPage';
+import { BaziInfoPage } from './pages/BaziInfoPage';
+import { BaziChartPage } from './pages/BaziChartPage';
 import { api } from './services/api';
 import './App.css';
 
@@ -34,8 +36,12 @@ function AppContent() {
     fetchSpreads();
   }, [dispatch, setLoading, setError]);
 
-  const handleStart = () => {
-    setCurrentPage('spread');
+  const handleSelectMode = (mode) => {
+    if (mode === 'tarot') {
+      setCurrentPage('spread');
+    } else if (mode === 'bazi') {
+      setCurrentPage('bazi-info');
+    }
   };
 
   const handleSelectSpread = (spread) => {
@@ -71,6 +77,13 @@ function AppContent() {
     await handleDrawCards();
   };
 
+  const handleBaziSubmit = ({ chart, token, request }) => {
+    dispatch({ type: 'SET_TOKEN', payload: token });
+    dispatch({ type: 'SET_BAZI_CHART', payload: chart });
+    dispatch({ type: 'SET_BAZI_REQUEST', payload: request });
+    setCurrentPage('bazi-chart');
+  };
+
   const handleInterpret = async (token, selectedCards) => {
     dispatch({ type: 'SET_TOKEN', payload: token });
     return await api.interpret(
@@ -92,6 +105,12 @@ function AppContent() {
       case 'drawing':
         setCurrentPage('direction');
         dispatch({ type: 'RESET_DRAWING' });
+        break;
+      case 'bazi-info':
+        setCurrentPage('welcome');
+        break;
+      case 'bazi-chart':
+        setCurrentPage('bazi-info');
         break;
       default:
         break;
@@ -124,7 +143,7 @@ function AppContent() {
 
   switch (currentPage) {
     case 'welcome':
-      return <WelcomePage onStart={handleStart} />;
+      return <WelcomePage onSelectMode={handleSelectMode} />;
     case 'spread':
       return (
         <SpreadSelectionPage
@@ -154,8 +173,12 @@ function AppContent() {
           onBack={handleBack}
         />
       );
+    case 'bazi-info':
+      return <BaziInfoPage onSubmit={handleBaziSubmit} onBack={handleBack} />;
+    case 'bazi-chart':
+      return <BaziChartPage chart={state.baziChart} token={state.token} onBack={handleBack} />;
     default:
-      return <WelcomePage onStart={handleStart} />;
+      return <WelcomePage onSelectMode={handleSelectMode} />;
   }
 }
 
