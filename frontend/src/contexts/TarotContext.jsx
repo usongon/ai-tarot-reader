@@ -10,6 +10,9 @@ const initialState = {
   flippedCards: new Set(),
   interpretation: null,
   token: localStorage.getItem('tarot_token') || '',
+  baziRequest: null,
+  baziChart: null,
+  baziInterpretation: '',
 };
 
 function tarotReducer(state, action) {
@@ -34,6 +37,14 @@ function tarotReducer(state, action) {
       return { ...state, token: action.payload };
     case 'RESET_DRAWING':
       return { ...state, cards: [], flippedCards: new Set(), interpretation: null };
+    case 'SET_BAZI_REQUEST':
+      return { ...state, baziRequest: action.payload };
+    case 'SET_BAZI_CHART':
+      return { ...state, baziChart: action.payload };
+    case 'SET_BAZI_INTERPRETATION':
+      return { ...state, baziInterpretation: action.payload };
+    case 'RESET_BAZI':
+      return { ...state, baziRequest: null, baziChart: null, baziInterpretation: '' };
     default:
       return state;
   }
