@@ -19,7 +19,6 @@ import io.reactivex.Flowable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Year;
 import java.util.*;
 
 /**
@@ -172,8 +171,8 @@ public class BaziService {
         // 计算十神关系
         chart.setShiShenList(calculateShiShen(eightChar, hourPillarMissing));
 
-        // 计算大运
-        chart.setDaYunList(calculateDaYun(eightChar, request.getGender()));
+        // 计算大运（传入出生日期用于计算周岁）
+        chart.setDaYunList(calculateDaYun(eightChar, request.getGender(), request.getBirthDate()));
 
         // 设置当前大运
         setCurrentDaYun(chart);
@@ -190,13 +189,12 @@ public class BaziService {
      * @throws InputRequiredException 如果缺少必需的输入参数
      */
     public Flowable<ApplicationResult> getInterpretationStream(BaziChart chart) throws NoApiKeyException, InputRequiredException {
-        String bizParamsJson = buildBizParamsJson(chart);
+        String userPrompt = buildUserPrompt(chart);
 
         ApplicationParam param = ApplicationParam.builder()
                 .apiKey(dashScopeConfig.getApiKey())
                 .appId(dashScopeConfig.getBaziAppId())
-                .prompt("排盘成功")
-                .bizParams(JsonUtils.parse(bizParamsJson))
+                .prompt(userPrompt)
                 .incrementalOutput(true)
                 .flowStreamMode(FlowStreamMode.MESSAGE_FORMAT)
                 .build();
@@ -382,7 +380,7 @@ public class BaziService {
     /**
      * 计算大运。
      */
-    private List<DaYunInfo> calculateDaYun(EightChar eightChar, String gender) {
+    private List<DaYunInfo> calculateDaYun(EightChar eightChar, String gender, String birthDate) {
         List<DaYunInfo> daYunList = new ArrayList<>();
 
         // gender: 1=male, 0=female
@@ -390,7 +388,11 @@ public class BaziService {
         Yun yun = eightChar.getYun(genderValue);
         com.nlf.calendar.eightchar.DaYun[] daYuns = yun.getDaYun();
 
-        int currentYear = Year.now().getValue();
+        // 计算当前周岁
+        String[] dateParts = birthDate.split("-");
+        java.time.LocalDate birthLocalDate = java.time.LocalDate.of(
+                Integer.parseInt(dateParts[0]), Integer.parseInt(dateParts[1]), Integer.parseInt(dateParts[2]));
+        int currentAge = java.time.Period.between(birthLocalDate, java.time.LocalDate.now()).getYears();
 
         for (com.nlf.calendar.eightchar.DaYun daYun : daYuns) {
             // 跳过初始阶段 (index == 0)
@@ -409,10 +411,8 @@ public class BaziService {
                 info.setDisplayText(ganZhi);
             }
 
-            // 判断是否当前大运
-            int startYear = daYun.getStartYear();
-            int endYear = daYun.getEndYear();
-            info.setCurrent(currentYear >= startYear && currentYear <= endYear);
+            // 用周岁判断是否当前大运（而非日历年比较）
+            info.setCurrent(currentAge >= daYun.getStartAge() && currentAge <= daYun.getEndAge());
 
             daYunList.add(info);
         }
@@ -433,58 +433,88 @@ public class BaziService {
     }
 
     /**
-     * 构建业务参数JSON字符串。
+     * 构建完整的用户提示词（直接作为 prompt 发给大模型，不需要百炼模板变量）。
      */
-    private String buildBizParamsJson(BaziChart chart) {
-        Map<String, Object> params = new HashMap<>();
+    private String buildUserPrompt(BaziChart chart) {
+        StringBuilder sb = new StringBuilder();
 
-        params.put("solarDate", chart.getSolarDate());
-        params.put("lunarDate", chart.getLunarDate());
-        params.put("gender", chart.getGenderText());
+        // 基本信息（周岁：考虑生日是否已过）
+        String[] dateNums = chart.getSolarDate().split("[^0-9]+");
+        java.time.LocalDate birthLocalDate = java.time.LocalDate.of(
+                Integer.parseInt(dateNums[0]), Integer.parseInt(dateNums[1]), Integer.parseInt(dateNums[2]));
+        int currentAge = java.time.Period.between(birthLocalDate, java.time.LocalDate.now()).getYears();
 
-        // 四柱
-        if (chart.getYearPillar() != null) {
-            params.put("yearPillar", chart.getYearPillar().getDisplayText());
-        }
-        if (chart.getMonthPillar() != null) {
-            params.put("monthPillar", chart.getMonthPillar().getDisplayText());
-        }
-        if (chart.getDayPillar() != null) {
-            params.put("dayPillar", chart.getDayPillar().getDisplayText());
-        }
+        sb.append("请为我解读以下八字命盘：\n\n");
+        sb.append("性别：").append(chart.getGenderText())
+          .append("，公历：").append(chart.getSolarDate())
+          .append("，农历：").append(chart.getLunarDate())
+          .append("，当前").append(currentAge).append("岁\n\n");
+
+        // 四柱八字
+        sb.append("四柱八字：\n");
+
+        appendPillarText(sb, "年柱", chart.getYearPillar());
+        appendPillarText(sb, "月柱", chart.getMonthPillar());
+        appendPillarText(sb, "日柱", chart.getDayPillar()).append(" ← 日主");
+
         if (chart.getHourPillar() != null) {
-            params.put("hourPillar", chart.getHourPillar().getDisplayText());
+            appendPillarText(sb, "时柱", chart.getHourPillar());
+        } else {
+            sb.append("时柱：出生时辰未知，时柱缺失\n");
         }
+        sb.append("\n");
 
         // 五行统计
         if (chart.getWuXingStats() != null) {
-            WuXingStats stats = chart.getWuXingStats();
-            Map<String, Object> wuXingMap = new HashMap<>();
-            wuXingMap.put("金", stats.getJin());
-            wuXingMap.put("木", stats.getMu());
-            wuXingMap.put("水", stats.getShui());
-            wuXingMap.put("火", stats.getHuo());
-            wuXingMap.put("土", stats.getTu());
-            wuXingMap.put("dayMasterWuXing", stats.getDayMasterWuXing());
-            wuXingMap.put("strength", stats.getStrength());
-            params.put("wuXingStats", wuXingMap);
+            WuXingStats s = chart.getWuXingStats();
+            sb.append("五行个数：金").append(s.getJin())
+              .append(" 木").append(s.getMu())
+              .append(" 水").append(s.getShui())
+              .append(" 火").append(s.getHuo())
+              .append(" 土").append(s.getTu())
+              .append("，日主五行：").append(s.getDayMasterWuXing())
+              .append("，").append(s.getStrength()).append("\n\n");
         }
 
         // 十神
-        if (chart.getShiShenList() != null) {
-            params.put("shiShenList", chart.getShiShenList());
+        if (chart.getShiShenList() != null && !chart.getShiShenList().isEmpty()) {
+            sb.append("十神关系：\n");
+            for (ShiShenRelation ss : chart.getShiShenList()) {
+                sb.append("- ").append(ss.getPosition()).append(" ")
+                  .append(ss.getTianGan()).append("(").append(ss.getWuXing()).append(") → ")
+                  .append(ss.getShiShen()).append("\n");
+            }
+            sb.append("\n");
         }
 
         // 大运
-        if (chart.getDaYunList() != null) {
-            params.put("daYunList", chart.getDaYunList());
+        if (chart.getDaYunList() != null && !chart.getDaYunList().isEmpty()) {
+            sb.append("大运走势：\n");
+            for (DaYunInfo dy : chart.getDaYunList()) {
+                sb.append("- ").append(dy.getDisplayText())
+                  .append("（").append(dy.getStartAge()).append("-").append(dy.getEndAge()).append("岁）");
+                if (dy.isCurrent()) sb.append(" ← 当前");
+                sb.append("\n");
+            }
+            sb.append("\n");
+
+            if (chart.getCurrentDaYun() != null) {
+                DaYunInfo cdy = chart.getCurrentDaYun();
+                sb.append("当前第").append(chart.getDaYunList().indexOf(cdy) + 1)
+                  .append("步大运：").append(cdy.getDisplayText())
+                  .append("（").append(cdy.getStartAge()).append("-").append(cdy.getEndAge()).append("岁")
+                  .append("，当前").append(currentAge).append("岁正在此步大运中）\n");
+            }
         }
 
-        // 当前大运
-        if (chart.getCurrentDaYun() != null) {
-            params.put("currentDaYun", chart.getCurrentDaYun().getDisplayText());
-        }
+        return sb.toString();
+    }
 
-        return new Gson().toJson(params);
+    private StringBuilder appendPillarText(StringBuilder sb, String label, Pillar p) {
+        sb.append(label).append("：天干 ").append(p.getTianGan())
+          .append("（").append(p.getTianGanWuXing()).append("）")
+          .append("、地支 ").append(p.getDiZhi())
+          .append("（").append(p.getDiZhiWuXing()).append("）\n");
+        return sb;
     }
 }

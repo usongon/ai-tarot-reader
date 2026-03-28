@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { ShiChenSelector } from '../components/bazi/ShiChenSelector';
 import { LunarDatePicker } from '../components/bazi/LunarDatePicker';
+import { SolarDatePicker } from '../components/bazi/SolarDatePicker';
 import { baziApi } from '../services/api';
 
 export function BaziInfoPage({ onSubmit, onBack }) {
@@ -10,7 +11,7 @@ export function BaziInfoPage({ onSubmit, onBack }) {
   const [birthDate, setBirthDate] = useState('1990-06-15');
   const [gender, setGender] = useState('male');
   const [shiChen, setShiChen] = useState('');
-  const [token, setToken] = useState(localStorage.getItem('tarot_token') || '');
+  const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -60,8 +61,7 @@ export function BaziInfoPage({ onSubmit, onBack }) {
             {isLunar ? (
               <LunarDatePicker value={birthDate} onChange={setBirthDate} />
             ) : (
-              <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)}
-                className="w-full bg-white/10 text-white border border-white/20 rounded-lg px-4 py-3 focus:ring-2 focus:ring-purple-500" />
+              <SolarDatePicker value={birthDate} onChange={setBirthDate} />
             )}
           </div>
 

@@ -1,6 +1,6 @@
-# Tarot Reader - AI智能塔罗牌解读应用
+# 灵境占卜 - AI智能占卜应用
 
-> 🔮 一个基于AI驱动的现代化塔罗牌解读Web应用，融合传统塔罗智慧与人工智能技术
+> 🔮 一个基于AI驱动的现代化占卜Web应用，融合塔罗牌解读与八字命理分析
 
 ![Tech Stack](https://img.shields.io/badge/Frontend-React%2019-61DAFB?style=flat-square&logo=react)
 ![Tech Stack](https://img.shields.io/badge/Backend-Spring%20Boot%203.5-6DB33F?style=flat-square&logo=spring)
@@ -11,17 +11,24 @@
 ## ✨ 项目特色
 
 ### 🎯 核心功能
-- **🃏 完整塔罗牌库**: 78张标准塔罗牌，包含大阿卡纳(22张)和小阿卡纳(56张)
-- **🎭 多样牌阵系统**: 支持单张牌、三牌阵、凯尔特十字等经典牌阵
-- **🤖 AI智能解读**: 集成阿里云DashScope，提供个性化的塔罗牌解读
+- **🃏 塔罗牌占卜**: 78张标准塔罗牌，支持单张牌、三牌阵、凯尔特十字等经典牌阵
+- **🧭 八字命理排盘**: 基于lunar-java的专业八字排盘，支持公历/农历输入、五行统计、十神关系、大运分析
+- **🤖 AI智能解读**: 集成阿里云DashScope，流式输出个性化解读结果
 - **🎨 沉浸式体验**: 精美的卡牌翻转动画和神秘主题设计
-- **📱 分享功能**: 一键生成精美的占卜结果卡片
+- **📱 分享功能**: 一键生成精美的占卜/命盘结果卡片
 
-### 🎪 交互体验
+### 🎪 塔罗占卜体验
 - **四阶段占卜流程**: 欢迎页 → 选择牌阵 → 选择方向 → 抽牌解读
 - **八大占卜方向**: 爱情、事业、健康、财运、感情发展、学业、人缘、综合运势
 - **正逆位系统**: 随机生成正位/逆位，提供不同维度的解读
-- **流畅动画**: 基于 Framer Motion 的丝滑过渡效果
+
+### 🧭 八字命理体验
+- **专业排盘**: 支持公历/农历日期、十二时辰选择
+- **四柱八字**: 年柱、月柱、日柱、时柱完整展示
+- **五行分析**: 金木水火土统计、身强身弱判断
+- **十神关系**: 天干十神、地支藏干十神完整推算
+- **大运走势**: 大运时间线展示，自动定位当前大运
+- **流式解读**: AI基于完整命盘信息进行专业解读
 
 ## 🛠️ 技术架构
 
@@ -42,6 +49,7 @@
 | Spring Data JPA | - | ORM框架 |
 | MySQL Connector | - | 数据库连接 |
 | DashScope SDK | 2.20.8 | 阿里云AI服务 |
+| lunar-java | 1.7.4 | 农历/八字计算 |
 | Java | 21 | 编程语言 |
 
 ### 数据存储
@@ -93,7 +101,8 @@ spring.datasource.password=<密码>
 
 # 阿里云 DashScope API 配置
 dashscope.api-key=<你的API密钥>
-dashscope.app-id=<你的应用ID>
+dashscope.app-id=<塔罗牌应用ID>
+dashscope.bazi-app-id=<八字命理应用ID>
 ```
 
 **切换环境：**
@@ -164,7 +173,7 @@ Content-Type: application/json
 }
 ```
 
-### AI解读服务
+### AI解读服务（塔罗牌）
 ```http
 POST /api/interpret
 Content-Type: application/json
@@ -183,6 +192,30 @@ Content-Type: application/json
 }
 ```
 
+### 八字排盘
+```http
+POST /api/bazi/chart
+Content-Type: application/json
+
+{
+  "birthDate": "1990-06-15",
+  "isLunar": false,
+  "gender": "male",
+  "shiChen": "wu"
+}
+```
+
+### 八字AI解读（流式SSE）
+```http
+POST /api/bazi/interpret/stream
+Content-Type: application/json
+
+{
+  "token": "YOUR_ACCESS_TOKEN",
+  "chart": { ... }
+}
+```
+
 ## 📁 项目结构
 
 ```
@@ -194,8 +227,10 @@ ai-tarot-reader/
 │   │   │   └── WebConfig.java       # CORS配置
 │   │   ├── 📂 controller/           # REST控制器
 │   │   ├── 📂 model/                # 数据模型
+│   │   │   └── 📂 bazi/             # 八字命理模型
 │   │   ├── 📂 repository/           # 数据访问层
 │   │   ├── 📂 service/              # 业务逻辑层
+│   │   │   └── BaziService.java     # 八字排盘+解读
 │   │   └── 📄 TarotReaderApplication.java
 │   ├── 📂 src/main/resources/
 │   │   ├── 📄 application.properties
@@ -205,17 +240,26 @@ ai-tarot-reader/
 │   └── 📄 pom.xml
 ├── 📂 frontend/                     # React 前端
 │   ├── 📂 src/
-│   │   ├── 📂 components/ui/        # UI组件
-│   │   │   ├── Button.jsx
-│   │   │   ├── TarotCard.jsx
-│   │   │   ├── Modal.jsx
-│   │   │   ├── Loading.jsx
-│   │   │   └── ShareCard.jsx
+│   │   ├── 📂 components/
+│   │   │   ├── 📂 ui/               # UI通用组件
+│   │   │   │   ├── Button.jsx
+│   │   │   │   ├── TarotCard.jsx
+│   │   │   │   ├── Modal.jsx
+│   │   │   │   ├── BufferedMarkdown.jsx
+│   │   │   │   └── ShareCard.jsx
+│   │   │   └── 📂 bazi/             # 八字命理组件
+│   │   │       ├── ChartDisplay.jsx
+│   │   │       ├── ShiChenSelector.jsx
+│   │   │       ├── LunarDatePicker.jsx
+│   │   │       ├── SolarDatePicker.jsx
+│   │   │       └── BaziShareCard.jsx
 │   │   ├── 📂 pages/                # 页面组件
 │   │   │   ├── WelcomePage.jsx
 │   │   │   ├── SpreadSelectionPage.jsx
 │   │   │   ├── DirectionSelectionPage.jsx
-│   │   │   └── DrawingPage.jsx
+│   │   │   ├── DrawingPage.jsx
+│   │   │   ├── BaziInfoPage.jsx
+│   │   │   └── BaziChartPage.jsx
 │   │   ├── 📂 contexts/             # 状态管理
 │   │   │   └── TarotContext.jsx
 │   │   ├── 📂 services/             # API封装
@@ -224,6 +268,7 @@ ai-tarot-reader/
 │   │   └── 📄 main.jsx
 │   ├── 📄 package.json
 │   └── 📄 vite.config.js
+├── 📄 deploy.sh                     # 一键部署脚本
 ├── 📄 LICENSE
 └── 📄 README.md
 ```
@@ -283,4 +328,4 @@ ai-tarot-reader/
 
 ---
 
-> 💫 愿塔罗智慧照亮你的人生道路 ✨
+> 💫 愿灵境智慧照亮你的人生道路 ✨

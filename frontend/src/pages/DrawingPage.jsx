@@ -3,11 +3,13 @@ import { Button } from '../components/ui/Button';
 import { TarotCard } from '../components/ui/TarotCard';
 import { Modal } from '../components/ui/Modal';
 import { Loading } from '../components/ui/Loading';
+import { BufferedMarkdown } from '../components/ui/BufferedMarkdown';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import html2canvas from 'html2canvas';
 import { ShareCard } from '../components/ui/ShareCard';
 import { useRef, useState } from 'react';
+import { api } from '../services/api';
 
 export function DrawingPage({ spread, direction, cards, flippedCards, onCardClick, onReshuffle, onInterpret, onBack }) {
   const [tokenModalOpen, setTokenModalOpen] = useState(false);
@@ -32,20 +34,33 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
 
     setTokenModalOpen(false);
     setIsInterpreting(true);
+    setInterpretation(''); // 清空之前的解读结果
 
-    try {
-      // 只发送已选中的牌，数量限制为牌阵需要的数量
-      const selectedCards = Array.from(flippedCards)
-        .slice(0, maxCards)
-        .map(index => cards[index]);
-      const result = await onInterpret(token, selectedCards);
-      setInterpretation(result);
-      setInterpretationModalOpen(true); // 显示解读结果浮窗
-    } catch (error) {
-      alert(error.message || '解读失败，请重试');
-    } finally {
-      setIsInterpreting(false);
-    }
+    // 只发送已选中的牌，数量限制为牌阵需要的数量
+    const selectedCards = Array.from(flippedCards)
+      .slice(0, maxCards)
+      .map(index => cards[index]);
+
+    // 使用流式输出
+    api.interpretStream(
+      token,
+      direction?.name,
+      spread?.chineseName,
+      selectedCards,
+      {
+        onChunk: (text) => {
+          setInterpretation(prev => prev + text);
+        },
+        onComplete: () => {
+          setIsInterpreting(false);
+          setInterpretationModalOpen(true);
+        },
+        onError: (error) => {
+          setIsInterpreting(false);
+          alert(error || '解读失败，请重试');
+        }
+      }
+    );
   };
 
   const handleShare = async () => {
@@ -213,15 +228,24 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
         </div>
       </Modal>
 
-      {/* AI解读中浮窗 */}
+      {/* AI解读中浮窗 - 显示流式输出 */}
       <Modal
         isOpen={isInterpreting}
         onClose={() => {}}
         title="🔮 AI解读中"
+        size="xlarge"
       >
-        <div className="flex flex-col items-center py-8">
-          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-gray-600">正在为您解读牌意，请稍候...</p>
+        <div className="space-y-4">
+          {interpretation ? (
+            <div className="prose prose-lg max-w-none text-gray-800 max-h-[60vh] overflow-y-auto p-5 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
+              <BufferedMarkdown content={interpretation} />
+            </div>
+          ) : (
+            <div className="flex flex-col items-center py-8">
+              <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-600">正在为您解读牌意，请稍候...</p>
+            </div>
+          )}
         </div>
       </Modal>
 

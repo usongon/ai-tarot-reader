@@ -1,17 +1,22 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import { BufferedMarkdown } from '../components/ui/BufferedMarkdown';
 import { ChartDisplay } from '../components/bazi/ChartDisplay';
+import { BaziShareCard } from '../components/bazi/BaziShareCard';
 import { baziApi } from '../services/api';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import html2canvas from 'html2canvas';
 
 export function BaziChartPage({ chart, token, onBack }) {
   const [isInterpreting, setIsInterpreting] = useState(false);
   const [interpretation, setInterpretation] = useState('');
   const [showInterpretation, setShowInterpretation] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [shareImage, setShareImage] = useState(null);
+  const shareCardRef = useRef(null);
 
   const handleInterpret = () => {
     setIsInterpreting(true);
@@ -22,6 +27,31 @@ export function BaziChartPage({ chart, token, onBack }) {
       onComplete: () => setIsInterpreting(false),
       onError: (error) => { setIsInterpreting(false); alert(error || '解读失败，请重试'); },
     });
+  };
+
+  const handleShare = () => {
+    setShareModalOpen(true);
+    setShareImage(null);
+    setTimeout(async () => {
+      if (shareCardRef.current) {
+        try {
+          const canvas = await html2canvas(shareCardRef.current);
+          setShareImage(canvas.toDataURL('image/png'));
+        } catch {
+          alert('生成图片失败，请重试');
+          setShareModalOpen(false);
+        }
+      }
+    }, 100);
+  };
+
+  const handleDownload = () => {
+    if (shareImage) {
+      const link = document.createElement('a');
+      link.download = `八字命盘-${chart.solarDate}.png`;
+      link.href = shareImage;
+      link.click();
+    }
   };
 
   return (
@@ -66,10 +96,11 @@ export function BaziChartPage({ chart, token, onBack }) {
           <Button size="large" onClick={handleInterpret}>🔮 AI 命理解读</Button>
         </motion.div>
       )}
-      {interpretation && !showInterpretation && (
+      {interpretation && !showInterpretation && !shareModalOpen && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-8 left-0 right-0 flex justify-center z-30">
-          <Button size="large" onClick={() => setShowInterpretation(true)}>👁️ 查看解读结果</Button>
+          className="fixed bottom-8 left-0 right-0 flex justify-center gap-3 z-30">
+          <Button variant="secondary" onClick={() => setShowInterpretation(true)}>👁️ 查看解读</Button>
+          <Button onClick={handleShare}>📸 分享命盘</Button>
         </motion.div>
       )}
 
@@ -97,10 +128,44 @@ export function BaziChartPage({ chart, token, onBack }) {
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{interpretation}</ReactMarkdown>
           </div>
           <div className="flex gap-3 justify-center">
+            <Button onClick={handleShare}>📸 分享命盘</Button>
             <Button variant="secondary" onClick={() => setShowInterpretation(false)}>关闭</Button>
           </div>
         </div>
       </Modal>
+
+      {/* 分享预览浮窗 */}
+      <Modal isOpen={shareModalOpen} onClose={() => setShareModalOpen(false)} title="📸 分享命盘" size="xlarge">
+        <div className="space-y-4">
+          {shareImage ? (
+            <>
+              <div className="max-h-[60vh] overflow-y-auto rounded-lg">
+                <img src={shareImage} alt="分享命盘" className="w-full h-auto rounded-lg" />
+              </div>
+              <div className="flex gap-3 justify-center">
+                <Button onClick={handleDownload}>💾 下载图片</Button>
+                <Button variant="secondary" onClick={() => setShareModalOpen(false)}>关闭</Button>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center py-8">
+              <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-600">正在生成分享图片...</p>
+            </div>
+          )}
+        </div>
+      </Modal>
+
+      {/* 隐藏的分享卡片（用于 html2canvas 截图） */}
+      {shareModalOpen && (
+        <div className="fixed -left-[9999px] top-0">
+          <BaziShareCard
+            ref={shareCardRef}
+            chart={chart}
+            interpretation={interpretation}
+          />
+        </div>
+      )}
     </div>
   );
 }
