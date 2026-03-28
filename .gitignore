@@ -43,3 +43,6 @@ mvnw.cmd
 # 构建输出
 dist/
 build/.superpowers/
+
+# 备案信息（不提交到公开仓库）
+frontend/src/config/beian.js

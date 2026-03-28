@@ -1,3 +1,4 @@
+import { BEIAN } from './config/beian';
 import { useState, useEffect } from 'react';
 import { TarotProvider, useTarot } from './contexts/TarotContext';
 import { WelcomePage } from './pages/WelcomePage';
@@ -185,7 +186,21 @@ function AppContent() {
 function App() {
   return (
     <TarotProvider>
-      <AppContent />
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 flex flex-col">
+        <div className="flex-1">
+          <AppContent />
+        </div>
+        {BEIAN && <footer className="text-center py-3 text-purple-400/50 text-[10px] md:text-xs">
+          <a
+            href={BEIAN.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-purple-300 transition-colors"
+          >
+            {BEIAN.number}
+          </a>
+        </footer>}
+      </div>
     </TarotProvider>
   );
 }
