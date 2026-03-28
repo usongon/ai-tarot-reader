@@ -4,6 +4,8 @@ import { TarotCard } from '../components/ui/TarotCard';
 import { Modal } from '../components/ui/Modal';
 import { Loading } from '../components/ui/Loading';
 import { BufferedMarkdown } from '../components/ui/BufferedMarkdown';
+import { MobileNavBar } from '../components/ui/MobileNavBar';
+import { StepIndicator } from '../components/ui/StepIndicator';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import html2canvas from 'html2canvas';
@@ -18,7 +20,7 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
   const [interpretation, setInterpretation] = useState(null);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [interpretationModalOpen, setInterpretationModalOpen] = useState(false);
-  const [shareImage, setShareImage] = useState(null); // 存储生成的分享图片
+  const [shareImage, setShareImage] = useState(null);
   const shareCardRef = useRef(null);
 
   const maxCards = spread?.cardCount || 1;
@@ -34,14 +36,12 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
 
     setTokenModalOpen(false);
     setIsInterpreting(true);
-    setInterpretation(''); // 清空之前的解读结果
+    setInterpretation('');
 
-    // 只发送已选中的牌，数量限制为牌阵需要的数量
     const selectedCards = Array.from(flippedCards)
       .slice(0, maxCards)
       .map(index => cards[index]);
 
-    // 使用流式输出
     api.interpretStream(
       token,
       direction?.name,
@@ -65,14 +65,14 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
 
   const handleShare = async () => {
     setShareModalOpen(true);
-    setShareImage(null); // 重置图片
+    setShareImage(null);
 
     setTimeout(async () => {
       if (shareCardRef.current) {
         try {
           const canvas = await html2canvas(shareCardRef.current);
           const imageUrl = canvas.toDataURL('image/png');
-          setShareImage(imageUrl); // 存储图片用于预览
+          setShareImage(imageUrl);
         } catch (error) {
           alert('生成图片失败，请重试');
           setShareModalOpen(false);
@@ -90,7 +90,6 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
     }
   };
 
-  // 获取用于解读的卡片（只取已翻开的牌，限制数量）
   const getCardsForInterpretation = () => {
     return Array.from(flippedCards)
       .slice(0, maxCards)
@@ -99,8 +98,8 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 flex flex-col">
-      {/* 头部 */}
-      <div className="p-4 bg-black/20 backdrop-blur-sm">
+      {/* 桌面端头部 */}
+      <div className="hidden md:block p-4 bg-black/20 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="text-white">
             <div className="text-sm text-purple-200">
@@ -121,24 +120,74 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
         </div>
       </div>
 
+      {/* 移动端导航栏 */}
+      <MobileNavBar
+        title="抽取塔罗牌"
+        onBack={onBack}
+        rightAction={
+          <button onClick={onReshuffle} className="text-yellow-400 text-xs">重选</button>
+        }
+      />
+      <StepIndicator current={3} total={3} />
+
+      {/* 移动端选牌提示 */}
+      <div className="md:hidden text-center px-4 py-2">
+        <div className="text-sm text-purple-100">
+          请选择 <span className="text-yellow-400 font-bold">{maxCards}</span> 张牌
+        </div>
+        <div className="text-xs text-gray-500">已选 {selectedCount}/{maxCards}</div>
+      </div>
+
+      {/* 桌面端提示 */}
+      {hasSelectedEnough && (
+        <div className="hidden md:block text-center text-purple-300 py-2">
+          ✓ 已选择足够数量，可以进行解读
+        </div>
+      )}
+
       {/* 主要内容 */}
-      <div className="flex-1 p-4 md:p-8 overflow-auto">
+      <div className="flex-1 p-2 md:p-8 overflow-auto">
         <div className="max-w-7xl mx-auto">
-          {/* 卡片区域 */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-white text-center mb-4">点击卡片选择（最多选择{maxCards}张）</h2>
-            {hasSelectedEnough && (
-              <p className="text-center text-purple-300 mb-6">✓ 已选择足够数量，可以进行解读</p>
-            )}
-            {cards.length > 0 ? (
-              <div className="flex flex-wrap justify-center gap-3 md:gap-4">
+          {cards.length > 0 ? (
+            <>
+              {/* 移动端：4列网格 */}
+              <div className="grid grid-cols-4 gap-1.5 px-1 md:hidden">
                 {cards.map((card, index) => {
                   const isSelected = flippedCards.has(index);
                   const canSelect = !isSelected && flippedCards.size < maxCards;
                   const isDisabled = isSelected || !canSelect;
 
                   return (
-                    <div key={index} className={`${isDisabled && !isSelected ? 'opacity-30' : ''}`}>
+                    <div key={index} className={`relative ${isDisabled && !isSelected ? 'opacity-30' : ''}`}>
+                      <TarotCard
+                        card={card}
+                        isFlipped={isSelected}
+                        onClick={() => {
+                          if (canSelect) {
+                            onCardClick(index);
+                          }
+                        }}
+                        index={index}
+                      />
+                      {isSelected && (
+                        <div className="absolute -top-1 -right-1 bg-yellow-400 text-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold z-10">
+                          {Array.from(flippedCards).indexOf(index) + 1}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* 桌面端：flex-wrap */}
+              <div className="hidden md:flex flex-wrap justify-center gap-4">
+                {cards.map((card, index) => {
+                  const isSelected = flippedCards.has(index);
+                  const canSelect = !isSelected && flippedCards.size < maxCards;
+                  const isDisabled = isSelected || !canSelect;
+
+                  return (
+                    <div key={`desktop-${index}`} className={`${isDisabled && !isSelected ? 'opacity-30' : ''}`}>
                       <TarotCard
                         card={card}
                         isFlipped={isSelected}
@@ -158,43 +207,50 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
                   );
                 })}
               </div>
-            ) : (
-              <div className="text-center text-white text-xl py-12">
-                点击"重新洗牌"开始
-              </div>
-            )}
-          </div>
+            </>
+          ) : (
+            <div className="text-center text-white text-lg md:text-xl py-12">
+              点击"重选"开始
+            </div>
+          )}
         </div>
       </div>
 
-      {/* 底部悬浮AI解读按钮 */}
+      {/* 底部按钮区 */}
       {hasSelectedEnough && !interpretation && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-8 left-0 right-0 flex justify-center z-30"
-        >
-          <div className="bg-transparent">
+        <div className="sticky bottom-0 p-3 bg-black/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none md:static md:p-4">
+          <div className="md:hidden">
+            <button
+              onClick={handleInterpret}
+              className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl font-medium shadow-lg active:scale-[0.98] transition-transform"
+            >
+              🔮 AI大师解读
+            </button>
+          </div>
+          <div className="hidden md:flex justify-center">
             <Button size="large" onClick={handleInterpret}>
               🔮 AI大师解读
             </Button>
           </div>
-        </motion.div>
+        </div>
       )}
 
-      {/* 已有解读结果时显示查看按钮 */}
       {interpretation && !interpretationModalOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-8 left-0 right-0 flex justify-center z-30"
-        >
-          <div className="bg-transparent">
+        <div className="sticky bottom-0 p-3 bg-black/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none md:static md:p-4">
+          <div className="md:hidden">
+            <button
+              onClick={() => setInterpretationModalOpen(true)}
+              className="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-2xl font-medium shadow-lg active:scale-[0.98] transition-transform"
+            >
+              👁️ 查看解读结果
+            </button>
+          </div>
+          <div className="hidden md:flex justify-center">
             <Button size="large" onClick={() => setInterpretationModalOpen(true)}>
               👁️ 查看解读结果
             </Button>
           </div>
-        </motion.div>
+        </div>
       )}
 
       {/* 密钥输入弹窗 */}
@@ -228,7 +284,7 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
         </div>
       </Modal>
 
-      {/* AI解读中浮窗 - 显示流式输出 */}
+      {/* AI解读中浮窗 */}
       <Modal
         isOpen={isInterpreting}
         onClose={() => {}}
@@ -237,7 +293,7 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
       >
         <div className="space-y-4">
           {interpretation ? (
-            <div className="prose prose-lg max-w-none text-gray-800 max-h-[60vh] overflow-y-auto p-5 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
+            <div className="prose prose-sm md:prose-lg max-w-none text-gray-800 max-h-[50vh] md:max-h-[60vh] overflow-y-auto p-3 md:p-5 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
               <BufferedMarkdown content={interpretation} />
             </div>
           ) : (
@@ -257,7 +313,7 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
         size="xlarge"
       >
         <div className="space-y-4">
-          <div className="prose prose-lg max-w-none text-gray-800 max-h-[60vh] overflow-y-auto p-5 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
+          <div className="prose prose-sm md:prose-lg max-w-none text-gray-800 max-h-[50vh] md:max-h-[60vh] overflow-y-auto p-3 md:p-5 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{interpretation}</ReactMarkdown>
           </div>
           <div className="flex gap-3 justify-center">
@@ -277,15 +333,13 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
         <div className="space-y-4">
           {shareImage ? (
             <>
-              {/* 图片预览区域 */}
-              <div className="max-h-[60vh] overflow-y-auto rounded-lg">
+              <div className="max-h-[50vh] md:max-h-[60vh] overflow-y-auto rounded-lg">
                 <img
                   src={shareImage}
                   alt="分享卡片"
                   className="w-full h-auto rounded-lg"
                 />
               </div>
-              {/* 操作按钮 */}
               <div className="flex gap-3 justify-center">
                 <Button onClick={handleDownloadShare}>
                   💾 下载图片

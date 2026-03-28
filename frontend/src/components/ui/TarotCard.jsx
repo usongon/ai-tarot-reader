@@ -9,7 +9,8 @@ export function TarotCard({ card, isFlipped, onClick, index }) {
       className="relative cursor-pointer group"
       onClick={onClick}
     >
-      <div className="relative w-32 h-48 md:w-40 md:h-60 rounded-xl shadow-2xl overflow-hidden">
+      {/* 移动端：aspect-ratio 自适应；桌面端：固定尺寸 */}
+      <div className="relative aspect-[2/3] md:aspect-auto md:w-40 md:h-60 rounded-xl shadow-2xl overflow-hidden">
         {/* 牌背 */}
         <AnimatePresence mode="wait">
           {!isFlipped && (
@@ -20,8 +21,8 @@ export function TarotCard({ card, isFlipped, onClick, index }) {
               transition={{ duration: 0.3 }}
               className="absolute inset-0 rounded-xl bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-900 flex items-center justify-center"
             >
-              <div className="w-24 h-36 md:w-32 md:h-48 border-2 border-purple-400/30 rounded-lg flex items-center justify-center">
-                <div className="text-purple-300/50 text-4xl">☾</div>
+              <div className="w-3/4 h-3/4 md:w-32 md:h-48 border-2 border-purple-400/30 rounded-lg flex items-center justify-center">
+                <div className="text-purple-300/50 text-2xl md:text-4xl">☾</div>
               </div>
             </motion.div>
           )}
@@ -35,7 +36,7 @@ export function TarotCard({ card, isFlipped, onClick, index }) {
               animate={{ opacity: 1, rotate: 0, scale: 1 }}
               exit={{ opacity: 0, rotate: 0 }}
               transition={{ duration: 0.3 }}
-              className="absolute inset-0 rounded-xl bg-gradient-to-br from-amber-100 to-yellow-100 flex flex-col items-center justify-center p-3"
+              className="absolute inset-0 rounded-xl bg-gradient-to-br from-amber-100 to-yellow-100 flex flex-col items-center justify-center p-2 md:p-3"
             >
               <div className="flex flex-col items-center justify-center w-full h-full">
                 {card?.imagePath ? (
@@ -47,11 +48,11 @@ export function TarotCard({ card, isFlipped, onClick, index }) {
                 ) : (
                   <div className="flex flex-col items-center justify-center text-amber-900">
                     <div className="text-center w-full px-1">
-                      <div className="text-xl font-bold leading-tight">{card?.nameChinese || card?.name || 'Unknown'}</div>
+                      <div className="text-sm md:text-xl font-bold leading-tight">{card?.nameChinese || card?.name || 'Unknown'}</div>
                     </div>
                   </div>
                 )}
-                <div className="text-amber-900 text-sm font-medium mt-2">
+                <div className="text-amber-900 text-xs md:text-sm font-medium mt-1 md:mt-2">
                   {card?.nameChinese || card?.name || 'Unknown'}
                 </div>
               </div>
@@ -62,7 +63,7 @@ export function TarotCard({ card, isFlipped, onClick, index }) {
 
       {!isFlipped && (
         <motion.div
-          className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl opacity-0 group-hover:opacity-20 blur-sm transition-opacity"
+          className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl opacity-0 group-hover:opacity-20 blur-sm transition-opacity hidden md:block"
           animate={{ scale: isFlipped ? 0 : 1 }}
         />
       )}
