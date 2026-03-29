@@ -70,8 +70,11 @@
 | Spring Cloud Alibaba | 2023.0.3.2 | 微服务组件 |
 | Nacos | 2.4.3 | 服务注册与发现 |
 | Spring Data JPA | - | ORM框架 |
+| Spring WebFlux | - | SSE流式响应 |
+| Jakarta Validation | - | 参数校验 |
 | DashScope SDK | 2.22.9 | 阿里云AI服务 |
 | lunar-java | 1.7.7 | 农历/八字计算 |
+| Lombok | - | 代码简化 |
 | Java | 21 | 编程语言 |
 
 ### 前端技术栈
@@ -149,37 +152,50 @@ npm run dev
 
 ```
 ai-tarot-reader/
-├── common/                          # 公共模块 (DTO、工具类)
+├── common/                          # 公共模块 (Result<T>、异常体系)
 ├── gateway-service/                 # API 网关 (:8080)
 ├── tarot-service/                   # 塔罗牌 + 八字命理服务 (:8081)
 │   └── src/main/java/cc/usong/tarot/
-│       ├── config/                  # 配置类
-│       ├── controller/              # REST 控制器
-│       ├── model/                   # 数据模型 (塔罗牌 + 八字)
-│       ├── repository/              # 数据访问层
+│       ├── config/                  # 配置类 (DashScope、全局异常处理)
+│       ├── constants/               # 常量 (TarotConstants、BaziConstants)
+│       ├── controller/              # REST 控制器 (WebFlux SSE)
+│       ├── converter/               # Entity ↔ DTO 转换器
+│       ├── dto/request/             # 请求 DTO (带校验注解)
+│       ├── dto/response/            # 响应 VO
+│       ├── entity/                  # JPA 实体 (AccessToken、TarotCardEntity)
+│       ├── enums/                   # 枚举 (Gender、ShiChen、Direction、CardCategory)
+│       ├── model/                   # 领域模型 (TarotSpread、bazi/)
+│       ├── repository/              # JPA 数据访问层
 │       └── service/                 # 业务逻辑
+│           ├── bazi/                #   八字排盘 (拆分为6个服务)
+│           ├── tarot/               #   塔罗解读 (PromptBuilder、AiService、SseService)
+│           └── token/               #   Token校验与限流
 ├── user-service/                    # 用户服务 (骨架，:8082)
 ├── payment-service/                 # 支付服务 (骨架，:8083)
 ├── fortune-service/                 # 运势订阅服务 (骨架，:8084)
 ├── community-service/               # 社区服务 (骨架，:8085)
 ├── frontend/                        # React 前端
-├── docker-compose.yml               # 开发环境基础设施
-├── docker-compose.prod.yml          # 生产环境完整部署
-├── deploy.sh                        # 一键部署脚本
-└── pom.xml                          # Maven 父 POM
+├── docs/                            # 设计文档与重构计划
+├── pom.xml                          # Maven 父 POM
+└── CLAUDE.md                         # Claude Code 项目指引
 ```
 
 ## API 接口
+
+所有非流式接口返回统一 `Result<T>` 格式：`{ "code": 200, "message": "操作成功", "data": T }`
 
 ### 塔罗牌
 - `GET /api/spreads` - 获取所有牌阵
 - `GET /api/deck` - 获取洗好的牌堆 (78张)
 - `POST /api/draw` - 根据牌阵抽牌
-- `POST /api/interpret` - AI 解读 (流式SSE，需要 token)
+- `POST /api/interpret` - AI 解读（非流式，需要 token）
+- `POST /api/interpret/stream` - AI 解读（流式 SSE，需要 token）
 
 ### 八字命理
 - `POST /api/bazi/chart` - 八字排盘计算
-- `POST /api/bazi/interpret/stream` - AI 八字解读 (流式SSE，需要 token)
+- `POST /api/bazi/interpret/stream` - AI 八字解读（流式 SSE，需要 token）
+
+SSE 流式接口使用 WebFlux `Flux<ServerSentEvent<String>>`，错误前缀：`[FORBIDDEN]`（token无效）、`[ERROR]`（服务端错误）。
 
 ## 许可证
 
