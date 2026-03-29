@@ -22,7 +22,4 @@ public class BaziRequest {
     private String gender;
 
     private String shiChen;
-
-    @NotBlank(message = "Token不能为空")
-    private String token;
 }
