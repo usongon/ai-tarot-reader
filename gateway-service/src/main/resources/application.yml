@@ -16,3 +16,8 @@ spring:
               uri: lb://tarot-service
               predicates:
                 - Path=/api/**
+              metadata:
+                response-timeout: 300000
+    loadbalancer:
+      cache:
+        ttl: 10s

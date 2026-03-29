@@ -38,6 +38,7 @@ export const api = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-Accel-Buffering': 'no',
         },
         body: JSON.stringify({ token, direction, spreadName, cards }),
       });
@@ -126,7 +127,7 @@ export const baziApi = {
     try {
       const response = await fetch(`${API_BASE_URL}/bazi/interpret/stream`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-Accel-Buffering': 'no' },
         body: JSON.stringify({ token, chart }),
       });
       if (response.status === 403) { onError('使用次数已达限制或口令无效'); return; }
