@@ -35,8 +35,6 @@
         <dubbo.version>3.3.4</dubbo.version>
         <dashscope-sdk.version>2.22.9</dashscope-sdk.version>
         <lunar.version>1.7.7</lunar.version>
-        <flyway.version>11.8.0</flyway.version>
-        <flyway-mysql.version>11.8.0</flyway-mysql.version>
     </properties>
 
     <dependencyManagement>
@@ -79,16 +77,6 @@
                 <groupId>cn.6tail</groupId>
                 <artifactId>lunar</artifactId>
                 <version>${lunar.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-core</artifactId>
-                <version>${flyway.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-mysql</artifactId>
-                <version>${flyway-mysql.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

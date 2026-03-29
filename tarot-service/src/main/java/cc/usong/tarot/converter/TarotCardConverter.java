@@ -22,7 +22,9 @@ public final class TarotCardConverter {
         vo.setUprightMeaning(entity.getUprightMeaning());
         vo.setUprightMeaningChinese(entity.getUprightMeaningCn());
         vo.setReversedMeaning(entity.getReversedMeaning());
-        vo.setReversed(true);
+        vo.setReversedMeaningChinese(entity.getReversedMeaningCn());
+        vo.setImagePath(entity.getImagePath());
+        vo.setReversed(reversed);
         return vo;
     }
 

@@ -18,5 +18,6 @@ public class CardVO {
     private String uprightMeaningChinese;
     private String reversedMeaning;
     private String reversedMeaningChinese;
+    private String imagePath;
     private boolean reversed;
 }
