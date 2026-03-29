@@ -2,7 +2,7 @@
 
 > 基于AI驱动的现代化占卜Web应用，融合塔罗牌解读与八字命理分析
 
-**在线体验**: [http://usong.cc](http://usong.cc) (限量体验Token: `eddc0e6b2ded11988b3fdd25eaf22039`)
+**在线体验**: [http://usong.cc](http://usong.cc) (限量体验Token: `236be2e16ac88a9725a2148c87ed23d2`)
 
 ![Tech Stack](https://img.shields.io/badge/Frontend-React%2019-61DAFB?style=flat-square&logo=react)
 ![Tech Stack](https://img.shields.io/badge/Gateway-Spring%20Cloud%20Gateway-6DB33F?style=flat-square&logo=spring)
