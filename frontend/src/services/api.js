@@ -1,21 +1,34 @@
 const API_BASE_URL = '/api';
 
+/**
+ * 解析后端 Result<T> 响应，提取 data 字段。
+ * Result<T> 格式：{ code: number, message: string, data: T }
+ */
+async function unwrapResult(response) {
+  if (!response.ok) {
+    throw new Error(`请求失败: ${response.status}`);
+  }
+  const result = await response.json();
+  if (result.code !== 200) {
+    throw new Error(result.message || '请求失败');
+  }
+  return result.data;
+}
+
 export const api = {
   // 获取所有牌阵
   getSpreads: async () => {
     const response = await fetch(`${API_BASE_URL}/spreads`);
-    if (!response.ok) throw new Error('Failed to get spreads');
-    return response.json();
+    return unwrapResult(response);
   },
 
   // 获取所有牌（洗好的牌组）
   getDeck: async () => {
     const response = await fetch(`${API_BASE_URL}/deck`);
-    if (!response.ok) throw new Error('Failed to get deck');
-    return response.json();
+    return unwrapResult(response);
   },
 
-  // 抽牌（保留兼容性，改用deck）
+  // 抽牌
   drawCards: async (spreadId) => {
     const response = await fetch(`${API_BASE_URL}/draw`, {
       method: 'POST',
@@ -24,8 +37,7 @@ export const api = {
       },
       body: JSON.stringify({ spreadId }),
     });
-    if (!response.ok) throw new Error('Failed to draw cards');
-    return response.json();
+    return unwrapResult(response);
   },
 
   // AI解读（流式输出）
@@ -94,7 +106,7 @@ export const api = {
     }
   },
 
-  // AI解读（非流式，保留兼容性）
+  // AI解读（非流式）
   interpret: async (token, direction, spreadName, cards) => {
     const response = await fetch(`${API_BASE_URL}/interpret`, {
       method: 'POST',
@@ -103,11 +115,7 @@ export const api = {
       },
       body: JSON.stringify({ token, direction, spreadName, cards }),
     });
-    if (response.status === 403) {
-      throw new Error('使用次数已达限制或口令无效');
-    }
-    if (!response.ok) throw new Error('Failed to interpret');
-    return response.text();
+    return unwrapResult(response);
   },
 };
 
@@ -119,8 +127,7 @@ export const baziApi = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ birthDate, isLunar, gender, shiChen }),
     });
-    if (!response.ok) throw new Error('排盘失败');
-    return response.json();
+    return unwrapResult(response);
   },
 
   interpretStream: async (token, chart, { onChunk, onComplete, onError }) => {
