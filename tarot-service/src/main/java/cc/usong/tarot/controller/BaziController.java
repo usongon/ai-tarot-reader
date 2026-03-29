@@ -1,135 +1,58 @@
 package cc.usong.tarot.controller;
 
-import com.alibaba.dashscope.app.ApplicationResult;
+import cc.usong.common.model.Result;
+import cc.usong.tarot.converter.BaziConverter;
+import cc.usong.tarot.dto.request.BaziInterpretRequest;
+import cc.usong.tarot.dto.request.BaziRequest;
+import cc.usong.tarot.dto.response.BaziChartVO;
 import cc.usong.tarot.model.bazi.BaziChart;
-import cc.usong.tarot.model.bazi.BaziInterpretRequest;
-import cc.usong.tarot.model.bazi.BaziRequest;
-import cc.usong.tarot.service.BaziService;
-import cc.usong.tarot.service.RateLimitExceededException;
-import cc.usong.tarot.service.RateLimitingService;
-import io.reactivex.Flowable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import cc.usong.tarot.service.bazi.BaziAiService;
+import cc.usong.tarot.service.bazi.BaziCalculationService;
+import cc.usong.tarot.service.tarot.SseService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import reactor.core.publisher.Flux;
 
 /**
- * 八字命盘控制器。
- * 处理八字排盘和AI解读相关的API请求。
- * @author dehua
+ * 八字命盘 API 控制器。
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/bazi")
+@RequiredArgsConstructor
 public class BaziController {
 
-    private final BaziService baziService;
-    private final RateLimitingService rateLimitingService;
+    private final BaziCalculationService baziCalculationService;
+    private final BaziAiService baziAiService;
+    private final SseService sseService;
 
-    /**
-     * 使用BaziService构造一个BaziController。
-     * @param baziService 用于处理八字命盘相关逻辑的服务。
-     * @param rateLimitingService 用于验证口令和限流的服务。
-     */
-    @Autowired
-    public BaziController(BaziService baziService, RateLimitingService rateLimitingService) {
-        this.baziService = baziService;
-        this.rateLimitingService = rateLimitingService;
-    }
-
-    /**
-     * 计算八字命盘。
-     * @param request 包含出生日期、性别、时辰等信息的请求体。
-     * @return 包含八字命盘结果的ResponseEntity。
-     */
     @PostMapping("/chart")
-    public ResponseEntity<BaziChart> calculateChart(@RequestBody BaziRequest request) {
-        BaziChart chart = baziService.calculateChart(request);
-        return ResponseEntity.ok(chart);
+    public Result<BaziChartVO> calculateChart(@Valid @RequestBody BaziRequest request) {
+        BaziChart chart = baziCalculationService.calculateChart(
+                request.getBirthDate(),
+                Boolean.TRUE.equals(request.getIsLunar()),
+                request.getGender(),
+                request.getShiChen()
+        );
+        return Result.success(BaziConverter.toBaziChartVO(chart));
     }
 
-    /**
-     * 流式获取八字解读结果。
-     * 使用 Server-Sent Events (SSE) 实现实时流式输出。
-     * @param request 包含八字命盘和口令的请求对象。
-     * @return SseEmitter 用于流式传输解读结果。
-     */
-    @PostMapping(value = "/interpret/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter interpretStream(@RequestBody BaziInterpretRequest request) {
-        SseEmitter emitter = new SseEmitter(180000L); // 3分钟超时
+    @PostMapping(value = "/interpret/stream", produces = "text/event-stream")
+    public Flux<ServerSentEvent<String>> streamInterpret(@Valid @RequestBody BaziInterpretRequest request) {
+        // 从前端传来的 chart map 重建 BaziChart（简化处理：前端直接传原始 JSON）
+        BaziChart chart = reconstructChart(request.getChart());
+        return sseService.streamDashScope(
+                () -> baziAiService.streamInterpret(chart),
+                request.getToken()
+        );
+    }
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            try {
-                // 验证口令
-                String token = request.getToken();
-                rateLimitingService.verifyToken(token);
-
-                // 获取流式输出
-                Flowable<ApplicationResult> resultFlowable = baziService.getInterpretationStream(request.getChart());
-
-                // 使用 blockingForEach 处理每个结果
-                resultFlowable.blockingForEach(result -> {
-                    try {
-                        String finishReason = result.getOutput().getFinishReason();
-                        if ("stop".equals(finishReason)) {
-                            // 流结束
-                            System.out.println("[STREAM] Task finished");
-                        } else {
-                            // 获取流式内容
-                            String content = result.getOutput().getWorkflowMessage().getMessage().getContent();
-                            if (content != null && !content.isEmpty()) {
-                                System.out.println("[STREAM] Received chunk at " + System.currentTimeMillis() + ": " + content.length() + " chars");
-                                emitter.send(SseEmitter.event()
-                                        .data(content)
-                                        .name("message"));
-                            }
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-                // 流式输出完成
-                emitter.complete();
-
-            } catch (RateLimitExceededException e) {
-                try {
-                    emitter.send(SseEmitter.event()
-                            .data("[FORBIDDEN]" + e.getMessage())
-                            .name("error"));
-                } catch (IOException ioException) {
-                    // Ignore
-                }
-                emitter.complete();
-            } catch (Exception e) {
-                e.printStackTrace();
-                try {
-                    emitter.send(SseEmitter.event()
-                            .data("[ERROR]" + e.getMessage())
-                            .name("error"));
-                } catch (IOException ioException) {
-                    // Ignore
-                }
-                emitter.completeWithError(e);
-            }
-        });
-
-        executor.shutdown();
-
-        // 设置超时和完成回调
-        emitter.onTimeout(() -> {
-            emitter.complete();
-        });
-
-        emitter.onCompletion(() -> {
-            // Cleanup if needed
-        });
-
-        return emitter;
+    private BaziChart reconstructChart(java.util.Map<String, Object> chartMap) {
+        // 使用 Jackson ObjectMapper 将 Map 转回 BaziChart
+        com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+        return mapper.convertValue(chartMap, BaziChart.class);
     }
 }
