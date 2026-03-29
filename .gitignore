@@ -51,3 +51,11 @@ frontend/src/config/beian.js
 *.war
 
 # Docker
+docker-compose.yml
+docker-compose.prod.yml
+
+# 敏感配置和部署文件
+deploy.sh
+manage.sh
+**/application-dev.properties
+**/application-prod.properties
