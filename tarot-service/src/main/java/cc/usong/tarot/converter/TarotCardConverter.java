@@ -20,7 +20,7 @@ public final class TarotCardConverter {
         vo.setName(entity.getNameEn());
         vo.setNameChinese(entity.getNameCn());
         vo.setUprightMeaning(entity.getUprightMeaning());
-        vo.setUprightMeaningChinese(entity.getDescription());
+        vo.setUprightMeaningChinese(entity.getUprightMeaningCn());
         vo.setReversedMeaning(entity.getReversedMeaning());
         vo.setReversed(true);
         return vo;

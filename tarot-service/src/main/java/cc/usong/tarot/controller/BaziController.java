@@ -45,7 +45,14 @@ public class BaziController {
         // 从前端传来的 chart map 重建 BaziChart（简化处理：前端直接传原始 JSON）
         BaziChart chart = reconstructChart(request.getChart());
         return sseService.streamDashScope(
-                () -> baziAiService.streamInterpret(chart),
+                () -> {
+                    try {
+                        return baziAiService.streamInterpret(chart);
+                    } catch (Exception e) {
+                        log.error("创建八字解读流失败", e);
+                        throw new RuntimeException(e);
+                    }
+                },
                 request.getToken()
         );
     }

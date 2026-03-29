@@ -60,7 +60,14 @@ public class TarotController {
     @PostMapping(value = "/interpret/stream", produces = "text/event-stream")
     public Flux<ServerSentEvent<String>> streamInterpret(@Valid @RequestBody InterpretRequest request) {
         return sseService.streamDashScope(
-                () -> tarotAiService.streamInterpret(request),
+                () -> {
+                    try {
+                        return tarotAiService.streamInterpret(request);
+                    } catch (Exception e) {
+                        log.error("创建塔罗解读流失败", e);
+                        throw new RuntimeException(e);
+                    }
+                },
                 request.getToken()
         );
     }

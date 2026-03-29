@@ -1,5 +1,6 @@
 package cc.usong.tarot.service;
 
+import cc.usong.common.exception.RateLimitExceededException;
 import cc.usong.tarot.entity.AccessToken;
 import cc.usong.tarot.repository.AccessTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
