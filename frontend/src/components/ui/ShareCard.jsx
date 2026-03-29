@@ -15,7 +15,7 @@ export const ShareCard = forwardRef(({ spread, direction, cards, interpretation 
         <div className="text-purple-200 text-lg">神秘之旅，洞察未来</div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
+      <div className="bg-white/15 rounded-xl p-6 mb-6">
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <div className="text-purple-300 text-sm mb-1">牌阵类型</div>
@@ -28,7 +28,7 @@ export const ShareCard = forwardRef(({ spread, direction, cards, interpretation 
         </div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
+      <div className="bg-white/15 rounded-xl p-6 mb-6">
         <h2 className="text-2xl font-bold mb-4 text-center">🎴 抽牌结果</h2>
         <div className="flex flex-wrap justify-center gap-3">
           {cards.map((card, index) => (
@@ -45,7 +45,7 @@ export const ShareCard = forwardRef(({ spread, direction, cards, interpretation 
         </div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+      <div className="bg-white/15 rounded-xl p-6">
         <h2 className="text-2xl font-bold mb-4 text-center">🔮 AI大师解读</h2>
         <div className="prose prose-invert prose-sm max-w-none text-purple-100">
           <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{normalizeMarkdown(interpretation)}</ReactMarkdown>

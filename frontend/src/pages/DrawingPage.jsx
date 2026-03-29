@@ -10,7 +10,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import { normalizeMarkdown } from '../components/ui/BufferedMarkdown';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { ShareCard } from '../components/ui/ShareCard';
 import { useRef, useState } from 'react';
 import { api } from '../services/api';
@@ -72,9 +72,11 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
     setTimeout(async () => {
       if (shareCardRef.current) {
         try {
-          const canvas = await html2canvas(shareCardRef.current);
-          const imageUrl = canvas.toDataURL('image/png');
-          setShareImage(imageUrl);
+          const dataUrl = await toPng(shareCardRef.current, {
+            pixelRatio: 2,
+            cacheBust: true,
+          });
+          setShareImage(dataUrl);
         } catch (error) {
           alert('生成图片失败，请重试');
           setShareModalOpen(false);
@@ -91,6 +93,8 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
       link.click();
     }
   };
+
+  const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
   const getCardsForInterpretation = () => {
     return Array.from(flippedCards)
@@ -343,9 +347,13 @@ export function DrawingPage({ spread, direction, cards, flippedCards, onCardClic
                 />
               </div>
               <div className="flex gap-3 justify-center">
-                <Button onClick={handleDownloadShare}>
-                  💾 下载图片
-                </Button>
+                {isWeChat ? (
+                  <p className="text-gray-500 text-sm">长按上方图片即可保存</p>
+                ) : (
+                  <Button onClick={handleDownloadShare}>
+                    💾 下载图片
+                  </Button>
+                )}
                 <Button variant="secondary" onClick={() => setShareModalOpen(false)}>
                   关闭
                 </Button>

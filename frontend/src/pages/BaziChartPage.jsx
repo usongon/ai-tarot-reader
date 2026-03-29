@@ -11,7 +11,9 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import { normalizeMarkdown } from '../components/ui/BufferedMarkdown';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
+
+const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
 export function BaziChartPage({ chart, token, onBack }) {
   const [isInterpreting, setIsInterpreting] = useState(false);
@@ -38,8 +40,11 @@ export function BaziChartPage({ chart, token, onBack }) {
     setTimeout(async () => {
       if (shareCardRef.current) {
         try {
-          const canvas = await html2canvas(shareCardRef.current);
-          setShareImage(canvas.toDataURL('image/png'));
+          const dataUrl = await toPng(shareCardRef.current, {
+            pixelRatio: 2,
+            cacheBust: true,
+          });
+          setShareImage(dataUrl);
         } catch {
           alert('生成图片失败，请重试');
           setShareModalOpen(false);
@@ -173,7 +178,11 @@ export function BaziChartPage({ chart, token, onBack }) {
                 <img src={shareImage} alt="分享命盘" className="w-full h-auto rounded-lg" />
               </div>
               <div className="flex gap-3 justify-center">
-                <Button onClick={handleDownload}>💾 下载图片</Button>
+                {isWeChat ? (
+                  <p className="text-gray-500 text-sm">长按上方图片即可保存</p>
+                ) : (
+                  <Button onClick={handleDownload}>💾 下载图片</Button>
+                )}
                 <Button variant="secondary" onClick={() => setShareModalOpen(false)}>关闭</Button>
               </div>
             </>
