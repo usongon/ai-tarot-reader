@@ -54,8 +54,17 @@ frontend/src/config/beian.js
 docker-compose.yml
 docker-compose.prod.yml
 
-# 敏感配置和部署文件
+# 敏感配置和部署文件（铁律：绝不提交）
 deploy.sh
 manage.sh
 **/application-dev.properties
 **/application-prod.properties
+**/application-dev.yml
+**/application-prod.yml
+**/application-dev.yaml
+**/application-prod.yaml
+docker-compose*.yml
+.env
+*.env
+**/secrets/
+**/credentials*

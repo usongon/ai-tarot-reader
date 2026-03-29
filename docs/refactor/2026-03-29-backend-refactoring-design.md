@@ -15,6 +15,7 @@
 5. **线程安全**：修复 RateLimitingService 竞态条件
 6. **资源管理**：消除 ExecutorService 泄漏，切换 WebFlux 流式处理
 7. **数据外置**：78 张塔罗牌数据从硬编码迁移到 MySQL
+8. **配置安全铁律**：所有敏感配置（deploy.sh、application-dev.properties、application-prod.properties、docker-compose.yml 等）绝对禁止提交到 Git，必须通过 `.gitignore` 严格排除
 
 ---
 
