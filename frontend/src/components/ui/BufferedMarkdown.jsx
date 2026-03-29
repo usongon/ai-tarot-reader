@@ -9,11 +9,11 @@ import remarkBreaks from 'remark-breaks';
  */
 export function normalizeMarkdown(text) {
   if (!text) return text;
-  // 将行内出现的列表标记拆到新行（仅在句末标点后触发，避免误伤正常数字）
-  const sentEnd = /[。！？；：）”」』…]/;
-  text = text.replace(new RegExp(`(${sentEnd.source})\\s*\\* `, 'g'), '$1\n* ');
-  text = text.replace(new RegExp(`(${sentEnd.source})\\s*(\\d+)\\. `, 'g'), '$1\n$2. ');
-  text = text.replace(new RegExp(`(${sentEnd.source})\\s*- `, 'g'), '$1\n- ');
+  // 将行内出现的列表标记拆到新行
+  // `* ` 用 [^\n*] 避免 **bold** 被拆；数字列表不会命中 3.14（无空格）；`- ` 限句末标点避免误伤 inline 分隔符
+  text = text.replace(/([^\n*])\* /g, '$1\n* ');
+  text = text.replace(/([^\n])(\d+)\. /g, '$1\n$2. ');
+  text = text.replace(/([。！？；：）”」』…])\s*- /g, '$1\n- ');
   const listOrHeading = /^\s*(?:[*\-] |\d+\. |#{1,6}\s)/;
   const lines = text.split('\n');
   const result = [];
