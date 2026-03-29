@@ -1,0 +1,175 @@
+<h2>塔罗流程 — 选择类页面</h2>
+<p class="subtitle">WelcomePage · SpreadSelection · DirectionSelection</p>
+
+<div class="section">
+  <h3>WelcomePage（首页）</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">移动端</div>
+      <div class="mockup-body" style="background: linear-gradient(180deg, #0a0a1a, #1a1035); padding: 20px 16px; min-height: 420px;">
+        <div style="text-align: center; padding: 30px 0 20px;">
+          <div style="font-size: 36px; color: #ffd700; text-shadow: 0 0 15px rgba(255,215,0,0.4); margin-bottom: 8px;">🌙</div>
+          <div style="font-size: 22px; color: #e0d5ff; font-weight: bold; letter-spacing: 3px;">AI塔罗占卜</div>
+          <div style="font-size: 12px; color: #666; margin-top: 4px;">探索命运的指引</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; max-width: 280px; margin: 0 auto;">
+          <div style="background: rgba(255,255,255,0.06); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid rgba(255,215,0,0.2);">
+            <div style="font-size: 32px; margin-bottom: 6px;">🔮</div>
+            <div style="font-size: 15px; color: #ffd700; font-weight: bold; margin-bottom: 4px;">塔罗占卜</div>
+            <div style="font-size: 11px; color: #888;">抽牌解读 · AI智慧</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border-radius: 16px; padding: 20px; text-align: center; border: 1px solid rgba(124,58,237,0.2);">
+            <div style="font-size: 32px; margin-bottom: 6px;">🎋</div>
+            <div style="font-size: 15px; color: #d4b8ff; font-weight: bold; margin-bottom: 4px;">八字命盘</div>
+            <div style="font-size: 11px; color: #888;">生辰八字 · 运势分析</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px;">
+          <div style="font-size: 10px; color: #444;">仅供娱乐参考</div>
+        </div>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">改动说明</div>
+      <div class="mockup-body" style="background: #1a1a2e; padding: 16px;">
+        <ul style="color: #c0b0e0; font-size: 13px; line-height: 2; padding-left: 16px;">
+          <li>标题从 <code style="color:#ffd700">text-6xl/8xl</code> → <code style="color:#ffd700">text-3xl</code></li>
+          <li>两卡片从并排 <code style="color:#ffd700">md:grid-cols-2</code> → 纵向堆叠</li>
+          <li>卡片 padding 缩小: <code style="color:#ffd700">p-8</code> → <code style="color:#ffd700">p-5</code></li>
+          <li>icon 从 <code style="color:#ffd700">text-5xl</code> → <code style="color:#ffd700">text-4xl</code></li>
+          <li>副标题从 <code style="color:#ffd700">text-2xl/3xl</code> → <code style="color:#ffd700">text-lg</code></li>
+          <li>去掉装饰性大文字 <code style="color:#ffd700">text-8xl</code></li>
+          <li>增加 <code style="color:#ffd700">max-w-xs mx-auto</code> 限制宽度</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>SpreadSelectionPage（牌阵选择）</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">移动端</div>
+      <div class="mockup-body" style="background: linear-gradient(180deg, #0a0a1a, #1a1035); padding: 12px 16px; min-height: 420px;">
+        <!-- 导航栏 -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div style="font-size: 12px; color: #888;">← 返回</div>
+          <div style="font-size: 13px; color: #e0d5ff;">选择牌阵</div>
+          <div style="width: 24px;"></div>
+        </div>
+        <!-- 步骤条 -->
+        <div style="display: flex; gap: 4px; margin-bottom: 16px;">
+          <div style="flex:1; height: 3px; border-radius: 2px; background: #ffd700;"></div>
+          <div style="flex:1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.15);"></div>
+          <div style="flex:1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.15);"></div>
+        </div>
+        <!-- 选项卡片 - 纵向 -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; border: 1px solid rgba(255,215,0,0.3); display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 28px;">🔮</div>
+            <div style="flex: 1;">
+              <div style="font-size: 14px; color: #ffd700; font-weight: bold;">单张牌</div>
+              <div style="font-size: 11px; color: #888; margin-top: 2px;">快速占卜，一目了然</div>
+            </div>
+            <div style="background: rgba(255,215,0,0.15); border-radius: 8px; padding: 4px 8px; font-size: 10px; color: #ffd700;">1张</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 28px;">🃏</div>
+            <div style="flex: 1;">
+              <div style="font-size: 14px; color: #e0d5ff; font-weight: bold;">三张牌</div>
+              <div style="font-size: 11px; color: #888; margin-top: 2px;">过去 · 现在 · 未来</div>
+            </div>
+            <div style="background: rgba(124,58,237,0.2); border-radius: 8px; padding: 4px 8px; font-size: 10px; color: #d4b8ff;">3张</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 28px;">✦</div>
+            <div style="flex: 1;">
+              <div style="font-size: 14px; color: #e0d5ff; font-weight: bold;">凯尔特十字</div>
+              <div style="font-size: 11px; color: #888; margin-top: 2px;">全面深入的命运解读</div>
+            </div>
+            <div style="background: rgba(124,58,237,0.2); border-radius: 8px; padding: 4px 8px; font-size: 10px; color: #d4b8ff;">10张</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">改动说明</div>
+      <div class="mockup-body" style="background: #1a1a2e; padding: 16px;">
+        <ul style="color: #c0b0e0; font-size: 13px; line-height: 2; padding-left: 16px;">
+          <li>新增顶部导航栏 + 步骤进度条</li>
+          <li>标题从 <code style="color:#ffd700">text-4xl</code> → <code style="color:#ffd700">text-lg</code> 移入导航栏</li>
+          <li>三列网格 → 纵向列表卡片</li>
+          <li>每项改为横向布局：icon + 文字 + badge</li>
+          <li>卡片 padding: <code style="color:#ffd700">p-6</code> → <code style="color:#ffd700">p-3.5</code></li>
+          <li>底部操作按钮区域在导航栏中处理</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>DirectionSelectionPage（方向选择）</h3>
+  <div class="split">
+    <div class="mockup">
+      <div class="mockup-header">移动端</div>
+      <div class="mockup-body" style="background: linear-gradient(180deg, #0a0a1a, #1a1035); padding: 12px 16px; min-height: 420px;">
+        <!-- 导航栏 -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div style="font-size: 12px; color: #888;">← 返回</div>
+          <div style="font-size: 13px; color: #e0d5ff;">选择方向</div>
+          <div style="width: 24px;"></div>
+        </div>
+        <!-- 步骤条 -->
+        <div style="display: flex; gap: 4px; margin-bottom: 16px;">
+          <div style="flex:1; height: 3px; border-radius: 2px; background: #ffd700;"></div>
+          <div style="flex:1; height: 3px; border-radius: 2px; background: #ffd700;"></div>
+          <div style="flex:1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.15);"></div>
+        </div>
+        <!-- 2列网格 -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 8px; text-align: center; border: 1px solid rgba(255,215,0,0.3);">
+            <div style="font-size: 24px; margin-bottom: 4px;">💕</div>
+            <div style="font-size: 13px; color: #ffd700; font-weight: 600;">爱情</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 24px; margin-bottom: 4px;">💼</div>
+            <div style="font-size: 13px; color: #e0d5ff; font-weight: 600;">事业</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 24px; margin-bottom: 4px;">💰</div>
+            <div style="font-size: 13px; color: #e0d5ff; font-weight: 600;">财运</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 24px; margin-bottom: 4px;">🏥</div>
+            <div style="font-size: 13px; color: #e0d5ff; font-weight: 600;">健康</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 24px; margin-bottom: 4px;">🎓</div>
+            <div style="font-size: 13px; color: #e0d5ff; font-weight: 600;">学业</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.06); border-radius: 12px; padding: 16px 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 24px; margin-bottom: 4px;">🌟</div>
+            <div style="font-size: 13px; color: #e0d5ff; font-weight: 600;">综合</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mockup">
+      <div class="mockup-header">改动说明</div>
+      <div class="mockup-body" style="background: #1a1a2e; padding: 16px;">
+        <ul style="color: #c0b0e0; font-size: 13px; line-height: 2; padding-left: 16px;">
+          <li>新增导航栏 + 步骤进度条（步骤2/3）</li>
+          <li>保持 2 列网格（移动端刚好适配）</li>
+          <li>4 列 → 2 列（<code style="color:#ffd700">md:grid-cols-4</code> 保持不变）</li>
+          <li>卡片 padding: <code style="color:#ffd700">p-6</code> → <code style="color:#ffd700">p-4</code></li>
+          <li>icon 从 <code style="color:#ffd700">text-4xl</code> → <code style="color:#ffd700">text-3xl</code></li>
+          <li>选中态用金色边框 <code style="color:#ffd700">border-yellow-500/30</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

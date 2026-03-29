@@ -8,26 +8,11 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
-        namespace: dev
     gateway:
-      routes:
-        - id: tarot-service
-          uri: lb://tarot-service
-          predicates:
-            - Path=/api/spreads,/api/deck,/api/draw,/api/interpret/**
-          filters:
-            - StripPrefix=0
-
-        - id: bazi-service
-          uri: lb://tarot-service
-          predicates:
-            - Path=/api/bazi/**
-          filters:
-            - StripPrefix=0
-
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowed-origins: "*"
-            allowed-methods: "*"
-            allowed-headers: "*"
+      server:
+        webmvc:
+          routes:
+            - id: tarot-route
+              uri: lb://tarot-service
+              predicates:
+                - Path=/api/**

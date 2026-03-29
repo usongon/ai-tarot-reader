@@ -6,13 +6,27 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="fortune-service" />
+        <module name="payment-service" />
+        <module name="common" />
+        <module name="community-service" />
+        <module name="gateway-service" />
         <module name="tarot-reader" />
+        <module name="tarot-service" />
+        <module name="user-service" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="common" options="-parameters" />
+      <module name="community-service" options="-parameters" />
+      <module name="fortune-service" options="-parameters" />
+      <module name="gateway-service" options="-parameters" />
+      <module name="payment-service" options="-parameters" />
       <module name="tarot-reader" options="-parameters" />
+      <module name="tarot-service" options="-parameters" />
+      <module name="user-service" options="-parameters" />
     </option>
   </component>
 </project>

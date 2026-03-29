@@ -1,0 +1,149 @@
+<h2>移动端布局方案</h2>
+<p class="subtitle">基于"宇宙深邃风"，选择整体移动端布局策略</p>
+
+<div class="cards">
+  <div class="card" data-choice="fullscreen-flow" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 0; min-height: 360px; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); display: flex; align-items: center; justify-content: center;">
+      <div style="width: 200px; padding: 16px;">
+        <!-- 手机框架 -->
+        <div style="border: 2px solid #555; border-radius: 24px; padding: 12px; background: linear-gradient(180deg, #0a0a1a, #1a1035);">
+          <!-- 顶部状态区 -->
+          <div style="text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 10px; color: #888; margin-bottom: 4px;">AI塔罗占卜</div>
+            <div style="font-size: 14px; color: #d4b8ff; font-weight: bold;">选择牌阵</div>
+          </div>
+          <!-- 全屏卡片流 -->
+          <div style="margin-bottom: 8px;">
+            <div style="background: rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; margin-bottom: 6px; border: 1px solid rgba(255,255,255,0.1);">
+              <div style="font-size: 11px; color: #ffd700;">⭐ 单张牌</div>
+              <div style="font-size: 9px; color: #999; margin-top: 2px;">快速占卜</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; margin-bottom: 6px; border: 1px solid rgba(212,184,255,0.3);">
+              <div style="font-size: 11px; color: #d4b8ff;">⭐⭐⭐ 三张牌</div>
+              <div style="font-size: 9px; color: #999; margin-top: 2px;">过去·现在·未来</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; border: 1px solid rgba(255,255,255,0.1);">
+              <div style="font-size: 11px; color: #ffd700;">⭐✦ 凯尔特十字</div>
+              <div style="font-size: 9px; color: #999; margin-top: 2px;">全面深入解读</div>
+            </div>
+          </div>
+          <!-- 底部按钮 -->
+          <div style="background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 20px; padding: 6px; text-align: center; font-size: 10px; color: white;">继续</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>方案1：全屏卡片流</h3>
+      <p>每个页面全屏展示，内容以卡片列表形式纵向排列。底部固定操作按钮。最简单直接，用户上下滑动浏览。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>实现简单，改动最小</li><li>符合移动端单手操作习惯</li><li>性能好</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>视觉冲击力一般</li><li>和 PC 端差异较小</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="immersive-cards" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 0; min-height: 360px; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); display: flex; align-items: center; justify-content: center;">
+      <div style="width: 200px; padding: 16px;">
+        <div style="border: 2px solid #555; border-radius: 24px; padding: 12px; background: linear-gradient(180deg, #0a0a1a, #1a1035); position: relative; overflow: hidden;">
+          <!-- 星空粒子背景效果 -->
+          <div style="position: absolute; top: 10px; right: 15px; width: 3px; height: 3px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 6px #ffd700;"></div>
+          <div style="position: absolute; top: 30px; left: 20px; width: 2px; height: 2px; background: #d4b8ff; border-radius: 50%; box-shadow: 0 0 4px #d4b8ff;"></div>
+          <div style="position: absolute; top: 55px; right: 25px; width: 2px; height: 2px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 4px #ffd700;"></div>
+          <!-- 大标题居中 -->
+          <div style="text-align: center; padding: 20px 0 16px;">
+            <div style="font-size: 22px; color: #ffd700; margin-bottom: 4px; text-shadow: 0 0 10px rgba(255,215,0,0.5);">🌙</div>
+            <div style="font-size: 13px; color: #e0d5ff; font-weight: bold; letter-spacing: 2px;">选择你的牌阵</div>
+          </div>
+          <!-- 横向滑动卡片 -->
+          <div style="display: flex; gap: 8px; overflow: hidden; padding: 0 4px;">
+            <div style="min-width: 80px; background: linear-gradient(180deg, rgba(124,58,237,0.3), rgba(124,58,237,0.1)); border-radius: 12px; padding: 10px 8px; text-align: center; border: 1px solid rgba(212,184,255,0.2);">
+              <div style="font-size: 18px; margin-bottom: 4px;">🔮</div>
+              <div style="font-size: 9px; color: #d4b8ff;">单张</div>
+            </div>
+            <div style="min-width: 80px; background: linear-gradient(180deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05)); border-radius: 12px; padding: 10px 8px; text-align: center; border: 1px solid rgba(255,215,0,0.3);">
+              <div style="font-size: 18px; margin-bottom: 4px;">🃏</div>
+              <div style="font-size: 9px; color: #ffd700;">三张</div>
+            </div>
+            <div style="min-width: 80px; background: linear-gradient(180deg, rgba(124,58,237,0.3), rgba(124,58,237,0.1)); border-radius: 12px; padding: 10px 8px; text-align: center; border: 1px solid rgba(212,184,255,0.2);">
+              <div style="font-size: 18px; margin-bottom: 4px;">✦</div>
+              <div style="font-size: 9px; color: #d4b8ff;">十字</div>
+            </div>
+          </div>
+          <!-- 指示器 -->
+          <div style="text-align: center; margin: 10px 0;">
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #7c3aed; margin: 0 2px;"></span>
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #ffd700; margin: 0 2px;"></span>
+            <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #7c3aed; margin: 0 2px;"></span>
+          </div>
+          <!-- 底部光晕按钮 -->
+          <div style="background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 20px; padding: 8px; text-align: center; font-size: 10px; color: white; box-shadow: 0 4px 15px rgba(124,58,237,0.5);">继续 →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>方案2：沉浸式卡片 + 横向滑动</h3>
+      <p>大标题居中，选项用横向可滑动卡片展示，星空粒子背景，金色光晕按钮。强调视觉冲击和沉浸感。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>视觉冲击力强，符合宇宙深邃风</li><li>交互有趣（横向滑动）</li><li>移动端差异化明显</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>实现复杂度较高</li><li>横向滑动可能不够直观</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-choice="stacked-pages" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 0; min-height: 360px; background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); display: flex; align-items: center; justify-content: center;">
+      <div style="width: 200px; padding: 16px;">
+        <div style="border: 2px solid #555; border-radius: 24px; padding: 12px; background: linear-gradient(180deg, #0a0a1a, #1a1035); overflow: hidden;">
+          <!-- 顶部导航栏 -->
+          <div style="display: flex; align-items: center; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div style="font-size: 10px; color: #888;">← 返回</div>
+            <div style="flex: 1; text-align: center; font-size: 11px; color: #e0d5ff;">塔罗占卜</div>
+            <div style="font-size: 10px; color: #ffd700;">☰</div>
+          </div>
+          <!-- 步骤指示器 -->
+          <div style="display: flex; justify-content: center; gap: 4px; margin-bottom: 14px;">
+            <div style="width: 20px; height: 3px; border-radius: 2px; background: #ffd700;"></div>
+            <div style="width: 20px; height: 3px; border-radius: 2px; background: #ffd700;"></div>
+            <div style="width: 20px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.15);"></div>
+            <div style="width: 20px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.15);"></div>
+          </div>
+          <!-- 内容区 -->
+          <div style="text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 14px; color: #ffd700; font-weight: bold; margin-bottom: 4px;">选择方向</div>
+            <div style="font-size: 9px; color: #888;">你希望占卜哪个方面？</div>
+          </div>
+          <!-- 网格选项 -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px;">
+            <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 8px; text-align: center; border: 1px solid rgba(255,215,0,0.3);">
+              <div style="font-size: 14px;">💕</div>
+              <div style="font-size: 9px; color: #d4b8ff;">爱情</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+              <div style="font-size: 14px;">💼</div>
+              <div style="font-size: 9px; color: #d4b8ff;">事业</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+              <div style="font-size: 14px;">💰</div>
+              <div style="font-size: 9px; color: #d4b8ff;">财运</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.06); border-radius: 8px; padding: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+              <div style="font-size: 14px;">🏥</div>
+              <div style="font-size: 9px; color: #d4b8ff;">健康</div>
+            </div>
+          </div>
+          <!-- 底部按钮 -->
+          <div style="background: linear-gradient(90deg, #7c3aed, #a855f7); border-radius: 20px; padding: 6px; text-align: center; font-size: 10px; color: white;">下一步</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>方案3：步骤式导航 + 紧凑网格</h3>
+      <p>顶部有返回/菜单栏，步骤进度指示器，内容用紧凑 2 列网格。流程感强，适合多步骤引导。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>流程清晰，步骤感强</li><li>紧凑布局信息密度高</li><li>导航一致性好</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>设计感稍弱</li><li>网格在小屏上可能拥挤</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>
