@@ -1,6 +1,6 @@
 package cc.usong.tarot.service;
 
-import cc.usong.tarot.model.AccessToken;
+import cc.usong.tarot.entity.AccessToken;
 import cc.usong.tarot.repository.AccessTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

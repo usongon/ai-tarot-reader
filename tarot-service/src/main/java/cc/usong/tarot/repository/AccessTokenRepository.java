@@ -1,6 +1,6 @@
 package cc.usong.tarot.repository;
 
-import cc.usong.tarot.model.AccessToken;
+import cc.usong.tarot.entity.AccessToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
